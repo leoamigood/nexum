@@ -36,3 +36,6 @@
 
 # IDE
 .idea/
+
+# Test Coverage
+coverage/
