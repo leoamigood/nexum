@@ -51,6 +51,7 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'octokit', '~> 5.0'
+gem 'ruby-enum'
 gem 'sidekiq'
 
 gem 'bundler-audit', require: false

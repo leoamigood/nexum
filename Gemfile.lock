@@ -242,6 +242,8 @@ GEM
       rubocop (>= 1.7.0, < 2.0)
     rubocop-rspec (2.12.1)
       rubocop (~> 1.31)
+    ruby-enum (0.9.0)
+      i18n
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -325,6 +327,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  ruby-enum
   selenium-webdriver
   sidekiq
   simplecov

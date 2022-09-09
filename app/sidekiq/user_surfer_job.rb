@@ -2,19 +2,18 @@
 
 class UserSurferJob
   include Sidekiq::Worker
+  prepend Tracer::JobTracer
   queue_as :surfer
 
   def perform(username)
     client = OctokitClient.client
 
-    begin
-      user = client.user(username)
-      Rails.logger.info("Processing user #{username}...")
+    user = client.user(username)
+    SurfTrace.progress(user)
 
-      UserFollowersJob.perform_async(user.login) if user.followers.positive?
+    UserResource.persist(user)
 
-    rescue Octokit::NotFound => e
-      Rails.logger.info(e.message)
-    end
+    # UserFollowersJob.perform_async(user.login) if user.followers.positive?
+    user
   end
 end

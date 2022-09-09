@@ -96,6 +96,8 @@ RSpec/LetSetup:
   Enabled: false
 RSpec/VariableName:
   Enabled: false
+RSpec/VerifiedDoubles:
+  Enabled: false
 RSpec/FactoryBot/CreateList:
   EnforcedStyle: n_times
 RSpec/Be:
