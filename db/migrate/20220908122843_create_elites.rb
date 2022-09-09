@@ -3,7 +3,7 @@
 class CreateElites < ActiveRecord::Migration[7.0]
   def up
     create_table :elites do |t|
-      t.string  :username, unique: true
+      t.string :username, unique: true
 
       t.timestamps
     end
