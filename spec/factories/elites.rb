@@ -2,6 +2,14 @@
 
 FactoryBot.define do
   factory :elite do
-    username { FFaker::Internet.user_name }
+    name            { FFaker::Name.name }
+    username        { FFaker::Internet.user_name }
+    email           { FFaker::Internet.email }
+    avatar_url      { FFaker::Internet.http_url }
+    followers_count { FFaker::Number.number(digits: 3) }
+    following_count { FFaker::Number.number(digits: 3) }
+    company         { FFaker::Company.name }
+    location        { FFaker::Address.city }
+    node_id         { FFaker::Lorem.characters(40) }
   end
 end

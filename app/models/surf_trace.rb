@@ -6,12 +6,16 @@ class SurfTrace < ApplicationRecord
       SurfTrace.create!(username:, state: Enum::ResourceState::ATTEMPTED)
     end
 
-    def progress(resource)
-      SurfTrace.create!(node_id: resource.node_id, state: Enum::ResourceState::IN_PROGRESS)
+    def progress(username)
+      SurfTrace.create!(username:, state: Enum::ResourceState::IN_PROGRESS)
     end
 
-    def succeed(resource)
-      SurfTrace.create!(username: resource.login, node_id: resource.node_id, state: Enum::ResourceState::SUCCEEDED)
+    def skipped(username)
+      SurfTrace.create!(username:, state: Enum::ResourceState::SKIPPED)
+    end
+
+    def succeed(username)
+      SurfTrace.create!(username:, state: Enum::ResourceState::SUCCEEDED)
     end
 
     def failed(username:, message:)

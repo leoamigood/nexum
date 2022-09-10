@@ -3,7 +3,16 @@
 class CreateElites < ActiveRecord::Migration[7.0]
   def up
     create_table :elites do |t|
-      t.string :username, unique: true
+      t.string  :name, index: true
+      t.string  :username, index: true
+      t.string  :email
+      t.string  :avatar_url
+      t.integer :followers_count
+      t.integer :following_count
+      t.string  :company, index: true
+      t.string  :location, index: true
+      t.string  :node_id, index: true
+      t.string  :twitter_username
 
       t.timestamps
     end

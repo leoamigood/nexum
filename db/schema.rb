@@ -10,14 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_09_134321) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_09_113935) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "elites", force: :cascade do |t|
+    t.string "name"
     t.string "username"
+    t.string "email"
+    t.string "avatar_url"
+    t.integer "followers_count"
+    t.integer "following_count"
+    t.string "company"
+    t.string "location"
+    t.string "node_id"
+    t.string "twitter_username"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["company"], name: "index_elites_on_company"
+    t.index ["location"], name: "index_elites_on_location"
+    t.index ["name"], name: "index_elites_on_name"
+    t.index ["node_id"], name: "index_elites_on_node_id"
+    t.index ["username"], name: "index_elites_on_username"
   end
 
   create_table "follows", force: :cascade do |t|
@@ -33,32 +47,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_09_134321) do
 
   create_table "surf_traces", force: :cascade do |t|
     t.string "username"
-    t.string "node_id"
     t.string "state", null: false
     t.string "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["node_id"], name: "index_surf_traces_on_node_id"
+    t.index ["state"], name: "index_surf_traces_on_state"
     t.index ["username"], name: "index_surf_traces_on_username"
-  end
-
-  create_table "user_resources", force: :cascade do |t|
-    t.string "node_id"
-    t.string "login"
-    t.string "avatar_url"
-    t.integer "followers"
-    t.string "name"
-    t.string "company"
-    t.string "location"
-    t.string "email"
-    t.boolean "twitter_username"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company"], name: "index_user_resources_on_company"
-    t.index ["location"], name: "index_user_resources_on_location"
-    t.index ["login"], name: "index_user_resources_on_login"
-    t.index ["name"], name: "index_user_resources_on_name"
-    t.index ["node_id"], name: "index_user_resources_on_node_id"
   end
 
 end

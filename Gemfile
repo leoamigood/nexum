@@ -52,6 +52,7 @@ gem 'bootsnap', require: false
 
 gem 'octokit', '~> 5.0'
 gem 'ruby-enum'
+gem 'ruby-limiter'
 gem 'sidekiq'
 
 gem 'bundler-audit', require: false
