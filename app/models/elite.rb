@@ -2,6 +2,7 @@
 
 class Elite < ApplicationRecord
   has_many :follows, dependent: :destroy
+  has_many :repositories, dependent: :destroy
 
   has_many :follower_relationships, class_name: 'Follow', dependent: :destroy
   has_many :followers, through: :follower_relationships, source: :follower

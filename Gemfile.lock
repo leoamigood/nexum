@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/ixti/sidekiq-throttled.git
+  revision: 2100c64d32e3ee825f7006d9e850a7b9329efc03
+  specs:
+    sidekiq-throttled (0.16.1)
+      concurrent-ruby
+      redis-prescription
+      sidekiq (>= 6.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -196,6 +205,7 @@ GEM
     rainbow (3.1.1)
     rake (13.0.6)
     redis (4.8.0)
+    redis-prescription (1.0.0)
     regexp_parser (2.5.0)
     reline (0.3.1)
       io-console (~> 0.5)
@@ -244,7 +254,6 @@ GEM
       rubocop (~> 1.31)
     ruby-enum (0.9.0)
       i18n
-    ruby-limiter (2.2.2)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
@@ -329,9 +338,9 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   ruby-enum
-  ruby-limiter
   selenium-webdriver
   sidekiq
+  sidekiq-throttled!
   simplecov
   spring
   sprockets-rails

@@ -22,7 +22,5 @@ module Nexum
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.active_job.queue_adapter = :sidekiq
-
-    config.x.throttling.balance = true
   end
 end

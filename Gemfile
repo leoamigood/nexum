@@ -52,8 +52,8 @@ gem 'bootsnap', require: false
 
 gem 'octokit', '~> 5.0'
 gem 'ruby-enum'
-gem 'ruby-limiter'
 gem 'sidekiq'
+gem 'sidekiq-throttled', github: 'ixti/sidekiq-throttled'
 
 gem 'bundler-audit', require: false
 gem 'rubocop-performance', require: false

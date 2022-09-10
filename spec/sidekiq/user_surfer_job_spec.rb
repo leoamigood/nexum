@@ -59,6 +59,7 @@ describe UserSurferJob do
 
       before do
         allow_any_instance_of(Octokit::Client).to receive(:user).and_return(user)
+        allow_any_instance_of(Octokit::Client).to receive(:repos).and_return([])
         allow_any_instance_of(Octokit::Client).to receive(:followers).and_return([])
         allow_any_instance_of(Octokit::Client).to receive(:following).and_return([])
       end

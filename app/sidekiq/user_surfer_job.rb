@@ -2,11 +2,16 @@
 
 class UserSurferJob
   include Sidekiq::Worker
+  include Sidekiq::Throttled::Worker
   include OctokitResource
-  extend Limiter::Mixin
   queue_as :surfer
 
-  limit_method(:surface, rate: 2500, interval: 3600, balanced: Rails.configuration.x.throttling.balance)
+  sidekiq_options queue: :surfer
+
+  sidekiq_throttle(
+    concurrency: { limit: 5 },
+    threshold:   { limit: 2_000, period: 1.hour }
+  )
 
   def perform(username, leader_name = nil, follower_name = nil)
     SurfTrace.attempt(username)
@@ -31,6 +36,7 @@ class UserSurferJob
     leader.followers << developer if leader.present?
     follower.following << developer if follower.present?
 
+    surface_repos(developer)
     surface_followers(developer)
     surface_following(developer)
   end
@@ -47,5 +53,10 @@ class UserSurferJob
     following.each do |user|
       UserSurferJob.perform_async(user.login, nil, developer.username)
     end
+  end
+
+  def surface_repos(developer)
+    repos = client.repos(developer.username)
+    developer.repositories << repos.map { |repo| Repository.persist(repo) }
   end
 end

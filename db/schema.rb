@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_09_113935) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,6 +43,36 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_09_113935) do
     t.index ["elite_id", "follower_id"], name: "index_follows_on_elite_id_and_follower_id", unique: true
     t.index ["elite_id"], name: "index_follows_on_elite_id"
     t.index ["follower_id"], name: "index_follows_on_follower_id"
+  end
+
+  create_table "repositories", force: :cascade do |t|
+    t.bigint "elite_id"
+    t.string "name"
+    t.string "full_name"
+    t.string "owner_name"
+    t.boolean "private"
+    t.string "html_url"
+    t.string "homepage"
+    t.string "topics", default: [], array: true
+    t.boolean "archived"
+    t.boolean "disabled"
+    t.string "description"
+    t.boolean "fork"
+    t.string "language"
+    t.integer "forks_count"
+    t.integer "stargazers_count"
+    t.integer "watchers_count"
+    t.integer "size"
+    t.string "default_branch"
+    t.string "visibility"
+    t.datetime "created_time"
+    t.datetime "updated_time"
+    t.string "node_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["elite_id"], name: "index_repositories_on_elite_id"
+    t.index ["name"], name: "index_repositories_on_name"
+    t.index ["owner_name"], name: "index_repositories_on_owner_name"
   end
 
   create_table "surf_traces", force: :cascade do |t|
