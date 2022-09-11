@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Follow < ApplicationRecord
-  belongs_to :follower, class_name: 'Elite'
-  belongs_to :elite, class_name: 'Elite'
+  belongs_to :follower, class_name: 'Developer'
+  belongs_to :developer
 
-  validates :follower_id, uniqueness: { scope: :elite_id }
+  validates :follower_id, uniqueness: { scope: :developer_id }
 end

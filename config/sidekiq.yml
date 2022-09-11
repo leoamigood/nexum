@@ -4,4 +4,5 @@
 :timeout: 25
 
 :queues:
-  - surfer
+  - repo_surfer
+  - user_surfer

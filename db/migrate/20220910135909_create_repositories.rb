@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 class CreateRepositories < ActiveRecord::Migration[7.0]
   def change
     create_table :repositories do |t|
-      t.bigint    :elite_id, foreign_key: true, index: true
+      t.bigint    :developer_id, foreign_key: true, index: true
       t.string    :name, index: true
       t.string    :full_name
       t.string    :owner_name, index: true
@@ -23,6 +25,7 @@ class CreateRepositories < ActiveRecord::Migration[7.0]
       t.datetime  :created_time
       t.datetime  :updated_time
       t.string    :node_id
+      t.timestamp :visited_at, default: nil
 
       t.timestamps
     end

@@ -1,62 +1,60 @@
 # frozen_string_literal: true
 
 class UserSurferJob
-  include Sidekiq::Worker
-  include Sidekiq::Throttled::Worker
+  include Sidekiq::Job
+  include Sidekiq::Throttled::Job
   include OctokitResource
-  queue_as :surfer
+  prepend UserResourceJobTracer
+  queue_as :user_surfer
 
-  sidekiq_options queue: :surfer
+  sidekiq_options queue: :user_surfer
 
   sidekiq_throttle(
-    concurrency: { limit: 5 },
-    threshold:   { limit: 2_000, period: 1.hour }
+    concurrency: { limit: 1, key_suffix: ->(key) { key } },
+    threshold:   { limit: 1000, period: 1.hour },
+    observer:    ->(strategy, *args) { Rails.logger.info "THROTTLED: #{strategy}, #{args}" }
   )
 
-  def perform(username, leader_name = nil, follower_name = nil)
-    SurfTrace.attempt(username)
-    if visited?(username)
-      SurfTrace.skipped(username)
-    else
-      SurfTrace.progress(username)
-      surface(username, leader_name, follower_name)
-      SurfTrace.succeed(username)
-    end
-  rescue Exception => e
-    SurfTrace.failed(username:, message: e.message)
-  end
-
-  def surface(username, leader_name, follower_name)
+  def perform(username)
     user = client.user(username)
-    developer = Elite.persist(user)
-
-    leader = Elite.find_by(username: leader_name)
-    follower = Elite.find_by(username: follower_name)
-
-    leader.followers << developer if leader.present?
-    follower.following << developer if follower.present?
+    developer = Developer.persist!(user)
 
     surface_repos(developer)
-    surface_followers(developer)
-    surface_following(developer)
+    surface_follows(developer)
+
+    developer.visited!
+  end
+
+  private
+
+  def surface_repos(developer)
+    RepoSurferJob.perform_async(developer.username)
+  end
+
+  def surface_follows(developer)
+    surface_followers(developer) do |accounts|
+      surface_accounts(accounts)
+      developer.followers |= Developer.where(username: accounts.map(&:login))
+    end
+
+    surface_following(developer) do |accounts|
+      surface_accounts(accounts)
+      developer.following |= Developer.where(username: accounts.map(&:login))
+    end
   end
 
   def surface_followers(developer)
-    followers = client.followers(developer.username)
-    followers.each do |user|
-      UserSurferJob.perform_async(user.login, developer.username, nil)
-    end
+    yield client.followers(developer.username, per_page:)
   end
 
   def surface_following(developer)
-    following = client.following(developer.username)
-    following.each do |user|
-      UserSurferJob.perform_async(user.login, nil, developer.username)
-    end
+    yield client.following(developer.username, per_page:)
   end
 
-  def surface_repos(developer)
-    repos = client.repos(developer.username)
-    developer.repositories << repos.map { |repo| Repository.persist(repo) }
+  def surface_accounts(accounts)
+    accounts
+      .reject { |account| Developer.find_by(username: account.login)&.username }
+      .map { |account| Developer.create!(username: account.login) }
+      .each { |user| UserSurferJob.perform_async(user.username) }
   end
 end

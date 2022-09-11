@@ -2,10 +2,10 @@
 
 require 'rails_helper'
 
-describe Elite, type: :model do
-  let(:john) { create(:elite, username: 'john') }
-  let(:leo) { create(:elite, username: 'leo') }
-  let(:william) { create(:elite, username: 'william') }
+describe Developer, type: :model do
+  let(:john) { create(:developer, username: 'john') }
+  let(:leo) { create(:developer, username: 'leo') }
+  let(:william) { create(:developer, username: 'william') }
 
   it 'add a follower' do
     expect(john.followers.count).to eq(0)

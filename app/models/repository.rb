@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class Repository < ApplicationRecord
-  belongs_to :elite
+  include Traceable
+
+  belongs_to :developer
 
   class << self
     def persist(repo)
@@ -27,7 +29,13 @@ class Repository < ApplicationRecord
         resource.created_time     = repo.created_at
         resource.updated_time     = repo.updated_at
         resource.node_id          = repo.node_id
+
+        resource.visited_at       = Time.current
       end
+    end
+
+    def recently_visited?(full_name)
+      recent.where(full_name:).present?
     end
   end
 end

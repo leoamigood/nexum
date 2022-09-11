@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Enum
-  class ResourceState
+  class TraceState
     extend Digester
     include Ruby::Enum
 
@@ -11,12 +11,8 @@ module Enum
     define :SKIPPED,      'skipped'
     define :FAILED,       'failed'
 
-    SUCCESS_TRACE = [ATTEMPTED, IN_PROGRESS, SUCCEEDED].freeze
-    SKIPPED_TRACE = [ATTEMPTED, SKIPPED].freeze
-    FAILURE_TRACE = [ATTEMPTED, IN_PROGRESS, FAILED].freeze
-
     def self.digest!(value)
-      digest_with_error(value, NotAcceptableResourceStateError)
+      digest_with_error(value, NotAcceptableTraceStateError)
     end
   end
 end

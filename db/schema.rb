@@ -14,7 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "elites", force: :cascade do |t|
+  create_table "developers", force: :cascade do |t|
     t.string "name"
     t.string "username"
     t.string "email"
@@ -25,28 +25,28 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.string "location"
     t.string "node_id"
     t.string "twitter_username"
+    t.datetime "visited_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["company"], name: "index_elites_on_company"
-    t.index ["location"], name: "index_elites_on_location"
-    t.index ["name"], name: "index_elites_on_name"
-    t.index ["node_id"], name: "index_elites_on_node_id"
-    t.index ["username"], name: "index_elites_on_username"
+    t.index ["company"], name: "index_developers_on_company"
+    t.index ["location"], name: "index_developers_on_location"
+    t.index ["name"], name: "index_developers_on_name"
+    t.index ["node_id"], name: "index_developers_on_node_id"
+    t.index ["username"], name: "index_developers_on_username"
   end
 
   create_table "follows", force: :cascade do |t|
-    t.integer "elite_id"
+    t.integer "developer_id"
     t.integer "follower_id"
-    t.integer "weight"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["elite_id", "follower_id"], name: "index_follows_on_elite_id_and_follower_id", unique: true
-    t.index ["elite_id"], name: "index_follows_on_elite_id"
+    t.index ["developer_id", "follower_id"], name: "index_follows_on_developer_id_and_follower_id", unique: true
+    t.index ["developer_id"], name: "index_follows_on_developer_id"
     t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
   create_table "repositories", force: :cascade do |t|
-    t.bigint "elite_id"
+    t.bigint "developer_id"
     t.string "name"
     t.string "full_name"
     t.string "owner_name"
@@ -68,21 +68,25 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.datetime "created_time"
     t.datetime "updated_time"
     t.string "node_id"
+    t.datetime "visited_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["elite_id"], name: "index_repositories_on_elite_id"
+    t.index ["developer_id"], name: "index_repositories_on_developer_id"
     t.index ["name"], name: "index_repositories_on_name"
     t.index ["owner_name"], name: "index_repositories_on_owner_name"
   end
 
-  create_table "surf_traces", force: :cascade do |t|
-    t.string "username"
+  create_table "traces", force: :cascade do |t|
+    t.string "value", null: false
     t.string "state", null: false
     t.string "message"
+    t.string "resource", null: false
+    t.string "key", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["state"], name: "index_surf_traces_on_state"
-    t.index ["username"], name: "index_surf_traces_on_username"
+    t.index ["resource"], name: "index_traces_on_resource"
+    t.index ["state"], name: "index_traces_on_state"
+    t.index ["value"], name: "index_traces_on_value"
   end
 
 end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :github_resource, class: OpenStruct do
+  factory :octokit, class: OpenStruct do
+    skip_create
+
     node_id     { FFaker::Lorem.characters(40) }
   end
 
@@ -14,5 +16,11 @@ FactoryBot.define do
     following   { FFaker::Number.number(digits: 3) }
     company     { FFaker::Company.name }
     location    { FFaker::Address.city }
+  end
+
+  trait :recently_visited do
+    after(:build) do |user|
+      FactoryBot.create(:developer, username: user.login, visited_at: 1.hour.ago)
+    end
   end
 end

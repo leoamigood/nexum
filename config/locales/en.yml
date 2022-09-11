@@ -30,4 +30,5 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  errors:
+    not_acceptable_trace_state: 'Not acceptable trace action'
