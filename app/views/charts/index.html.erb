@@ -1,0 +1,7 @@
+<%= line_chart @repos_by_language.group(:language).group_by_year(:created_time).count, title: 'Repositories per year by language' %>
+<br/>
+<%= pie_chart @repos_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Repositories by language' %>
+<br/>
+<%= bar_chart @users_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Languages popularity' %>
+<br/>
+<%= area_chart Developer.group_by_hour(:visited_at).count, title: 'Developers discovered' %>

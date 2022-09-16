@@ -95,6 +95,7 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    chartkick (4.2.1)
     childprocess (4.1.0)
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
@@ -124,6 +125,8 @@ GEM
     ffaker (2.21.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    groupdate (6.1.0)
+      activesupport (>= 5.2)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     importmap-rails (1.1.5)
@@ -322,11 +325,13 @@ DEPENDENCIES
   brakeman
   bundler-audit
   capybara
+  chartkick
   debug
   dotenv-rails
   factory_bot_rails
   faraday-retry
   ffaker
+  groupdate
   importmap-rails
   jbuilder
   octokit (~> 5.0)
