@@ -4,4 +4,4 @@
 <br/>
 <%= bar_chart @users_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Languages popularity' %>
 <br/>
-<%= area_chart Developer.group_by_hour(:visited_at).count, title: 'Developers discovered' %>
+<%= area_chart Developer.group_by_hour(:visited_at).count, title: 'Developers processed' %>

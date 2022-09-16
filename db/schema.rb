@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["developer_id"], name: "index_repositories_on_developer_id"
+    t.index ["full_name"], name: "index_repositories_on_full_name"
     t.index ["name"], name: "index_repositories_on_name"
     t.index ["owner_name"], name: "index_repositories_on_owner_name"
   end

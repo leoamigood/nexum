@@ -4,10 +4,11 @@ class UserSurferJob
   include Sidekiq::Job
   include Sidekiq::Throttled::Job
   include OctokitResource
+  prepend JobWatcher
   prepend UserResourceJobTracer
   queue_as :user_surfer
 
-  sidekiq_options queue: :user_surfer
+  sidekiq_options queue: :user_surfer, timeout: 10.minutes
 
   sidekiq_throttle(
     concurrency: { limit: 1, key_suffix: ->(key) { key } },

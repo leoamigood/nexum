@@ -5,7 +5,7 @@ class CreateRepositories < ActiveRecord::Migration[7.0]
     create_table :repositories do |t|
       t.bigint    :developer_id, foreign_key: true, index: true
       t.string    :name, index: true
-      t.string    :full_name
+      t.string    :full_name, index: true, unique: true
       t.string    :owner_name, index: true
       t.boolean   :private
       t.string    :html_url
