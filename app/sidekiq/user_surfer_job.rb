@@ -4,17 +4,14 @@ class UserSurferJob
   include Sidekiq::Job
   include Sidekiq::Throttled::Job
   include OctokitResource
-  prepend JobWatcher
+  prepend JobBenchmarker
   prepend UserResourceJobTracer
+  prepend JobWatcher
   queue_as :user_surfer
 
   sidekiq_options queue: :user_surfer, timeout: 10.minutes
 
-  sidekiq_throttle(
-    concurrency: { limit: 1, key_suffix: ->(key) { key } },
-    threshold:   { limit: 1000, period: 1.hour },
-    observer:    ->(strategy, *args) { Rails.logger.info "THROTTLED: #{strategy}, #{args}" }
-  )
+  sidekiq_throttle(threshold: { limit: 1000, period: 1.hour })
 
   def perform(username)
     user = client.user(username)
@@ -33,29 +30,20 @@ class UserSurferJob
   end
 
   def surface_follows(developer)
-    surface_followers(developer) do |accounts|
-      surface_accounts(accounts)
-      developer.followers |= Developer.where(username: accounts.map(&:login))
-    end
+    followers = client.followers(developer.username, per_page:)
+    usernames = surface_users(followers)
+    developer.followers << Developer.where(username: usernames)
 
-    surface_following(developer) do |accounts|
-      surface_accounts(accounts)
-      developer.following |= Developer.where(username: accounts.map(&:login))
-    end
+    following = client.following(developer.username, per_page:)
+    usernames = surface_users(following)
+    developer.following << Developer.where(username: usernames)
   end
 
-  def surface_followers(developer)
-    yield client.followers(developer.username, per_page:)
-  end
+  def surface_users(users)
+    undiscovered = users.map(&:login) - Developer.where(username: users.map(&:login)).pluck(:username)
+    Developer.insert_all(undiscovered.map { |username| { username: } }) if undiscovered.present?
 
-  def surface_following(developer)
-    yield client.following(developer.username, per_page:)
-  end
-
-  def surface_accounts(accounts)
-    accounts
-      .reject { |account| Developer.find_by(username: account.login)&.username }
-      .map { |account| Developer.create!(username: account.login) }
-      .each { |user| UserSurferJob.perform_async(user.username) }
+    undiscovered.each { |username| UserSurferJob.perform_async(username) }
+    undiscovered
   end
 end

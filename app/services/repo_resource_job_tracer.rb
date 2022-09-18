@@ -3,8 +3,8 @@
 module RepoResourceJobTracer
   include ResourceJobTracer
 
-  def trace_by
-    { key: 'full_name', resource: 'repo' }
+  def resource
+    'repo'
   end
 
   def domain

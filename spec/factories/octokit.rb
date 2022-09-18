@@ -20,7 +20,7 @@ FactoryBot.define do
 
   trait :recently_visited do
     after(:build) do |user|
-      FactoryBot.create(:developer, username: user.login, visited_at: 1.hour.ago)
+      FactoryBot.create(:developer, username: user.login, visited_at: Traceable::RECENCY_PERIOD.ago + Traceable::RECENCY_PERIOD / 2)
     end
   end
 end

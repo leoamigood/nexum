@@ -7,6 +7,7 @@ module Enum
 
     define :ATTEMPTED,    'attempted'
     define :IN_PROGRESS,  'in_progress'
+    define :BENCHMARK,    'benchmark'
     define :SUCCEEDED,    'succeeded'
     define :SKIPPED,      'skipped'
     define :FAILED,       'failed'

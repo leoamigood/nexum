@@ -1,7 +1,15 @@
-<%= line_chart @repos_by_language.group(:language).group_by_year(:created_time).count, title: 'Repositories per year by language' %>
-<br/>
-<%= pie_chart @repos_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Repositories by language' %>
+<%= line_chart @repos_by_language.group(:language).group_by_year(:created_at).count, title: 'Repositories per year by language' %>
 <br/>
 <%= bar_chart @users_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Languages popularity' %>
 <br/>
-<%= area_chart Developer.group_by_hour(:visited_at).count, title: 'Developers processed' %>
+<%= pie_chart @repos_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Repositories by language' %>
+<br/>
+<%= column_chart @technologies, title: 'Technologies popularity' %>
+<br/>
+<%= column_chart @keywords, title: 'Keywords popularity' %>
+<br/>
+<%= area_chart Developer.group_by_hour(:visited_at).count, title: 'Developers processed hourly', colors: %w[#bd0 #666], thousands: "," %>
+<%= area_chart @developers, title: 'Cumulative developers processed', curve: false, thousands: "," %>
+<br/>
+<%= area_chart Repository.group_by_hour(:visited_at).count, title: 'Repositories processed hourly', colors: %w[#bd0 #666], thousands: "," %>
+<%= area_chart @repositories, title: 'Cumulative repositories processed', curve: false, thousands: "," %>

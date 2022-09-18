@@ -1,8 +1,8 @@
 ---
 :verbose: true
-:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY') { 10 } %>
+:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY') { 5 } %>
 :timeout: 25
 
 :queues:
-  - [repo_surfer, 12]
-  - [user_surfer, 4]
+  - [repo_surfer, 4]
+  - [user_surfer, 1]

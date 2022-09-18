@@ -3,8 +3,8 @@
 module UserResourceJobTracer
   include ResourceJobTracer
 
-  def trace_by
-    { key: 'username', resource: 'user' }
+  def resource
+    'user'
   end
 
   def domain

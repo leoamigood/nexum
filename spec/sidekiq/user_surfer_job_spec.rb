@@ -82,7 +82,7 @@ describe UserSurferJob do
       it 'surf trace records attempted and succeeded states' do
         described_class.perform_async(user.login)
 
-        trace = Trace.where(value: user.login).last
+        trace = Trace.where(username: user.login).last
         expect(trace).to be
         expect(trace.state).to eq(Enum::TraceState::SUCCEEDED)
       end
@@ -93,7 +93,7 @@ describe UserSurferJob do
         it 'skip surfing this user and adds the trace' do
           described_class.perform_async(user.login)
 
-          trace = Trace.where(value: user.login).last
+          trace = Trace.where(username: user.login).last
           expect(trace).to be
           expect(trace.state).to eq(Enum::TraceState::SKIPPED)
         end

@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.string "username"
     t.string "email"
     t.string "avatar_url"
+    t.integer "repos_count"
     t.integer "followers_count"
     t.integer "following_count"
     t.string "company"
@@ -32,7 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.index ["location"], name: "index_developers_on_location"
     t.index ["name"], name: "index_developers_on_name"
     t.index ["node_id"], name: "index_developers_on_node_id"
-    t.index ["username"], name: "index_developers_on_username"
+    t.index ["username"], name: "index_developers_on_username", unique: true
   end
 
   create_table "follows", force: :cascade do |t|
@@ -41,8 +42,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["developer_id", "follower_id"], name: "index_follows_on_developer_id_and_follower_id", unique: true
-    t.index ["developer_id"], name: "index_follows_on_developer_id"
-    t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
 
   create_table "repositories", force: :cascade do |t|
@@ -65,29 +64,26 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.integer "size"
     t.string "default_branch"
     t.string "visibility"
-    t.datetime "created_time"
-    t.datetime "updated_time"
     t.string "node_id"
     t.datetime "visited_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["developer_id"], name: "index_repositories_on_developer_id"
-    t.index ["full_name"], name: "index_repositories_on_full_name"
+    t.index ["full_name"], name: "index_repositories_on_full_name", unique: true
     t.index ["name"], name: "index_repositories_on_name"
     t.index ["owner_name"], name: "index_repositories_on_owner_name"
   end
 
   create_table "traces", force: :cascade do |t|
-    t.string "value", null: false
+    t.string "username", null: false
     t.string "state", null: false
     t.string "message"
     t.string "resource", null: false
-    t.string "key", null: false
+    t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["resource"], name: "index_traces_on_resource"
     t.index ["state"], name: "index_traces_on_state"
-    t.index ["value"], name: "index_traces_on_value"
+    t.index ["username"], name: "index_traces_on_username"
   end
 
 end

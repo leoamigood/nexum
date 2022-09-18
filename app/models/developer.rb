@@ -19,6 +19,7 @@ class Developer < ApplicationRecord
       developer.name             = user.name
       developer.email            = user.email
       developer.avatar_url       = user.avatar_url
+      developer.repos_count      = user.public_repos
       developer.followers_count  = user.followers
       developer.following_count  = user.following
       developer.company          = user.company
