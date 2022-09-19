@@ -5,7 +5,7 @@ module ResourceJobTracer
 
   def perform(username)
     trace(:attempted, username)
-    if domain.recently_visited?(username)
+    if resource.recently_visited?(username) && !ignore_recency?
       trace(:skipped, username)
     else
       trace(:in_progress, username)
@@ -17,6 +17,10 @@ module ResourceJobTracer
   rescue StandardError => e
     trace(:failed, username, message: e.message, value: e.class.name)
     raise e
+  end
+
+  def ignore_recency?
+    defined?(super) ? super : false
   end
 
   def domain

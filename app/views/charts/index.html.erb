@@ -1,4 +1,4 @@
-<%= line_chart @repos_by_language.group(:language).group_by_year(:created_at).count, title: 'Repositories per year by language' %>
+<%= line_chart @repos_by_language.group(:language).group_by_year(:created_at).count, title: 'Repositories created per year' %>
 <br/>
 <%= bar_chart @users_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Languages popularity' %>
 <br/>

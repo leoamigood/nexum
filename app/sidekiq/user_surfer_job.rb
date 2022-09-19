@@ -7,9 +7,9 @@ class UserSurferJob
   prepend JobBenchmarker
   prepend UserResourceJobTracer
   prepend JobWatcher
-  queue_as :user_surfer
+  queue_as :users_surfer
 
-  sidekiq_options queue: :user_surfer, timeout: 10.minutes
+  sidekiq_options queue: :users_surfer, timeout: 10.minutes
 
   sidekiq_throttle(threshold: { limit: 1000, period: 1.hour })
 

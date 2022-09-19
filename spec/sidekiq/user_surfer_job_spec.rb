@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'sidekiq/testing'
 
 describe UserSurferJob do
-  specify { is_expected.to be_processed_in :user_surfer }
+  specify { is_expected.to be_processed_in :users_surfer }
   specify { is_expected.to be_retryable true }
 
   context 'when job is enqueued' do
@@ -47,6 +47,7 @@ describe UserSurferJob do
           expect(trace.value).to eq('not_found_username')
           expect(trace.state).to eq(Enum::TraceState::FAILED)
           expect(trace.message).to eq('Octokit::NotFound')
+          expect(trace.resource).to eq(described_class.name)
         end
       end
     end
@@ -64,6 +65,7 @@ describe UserSurferJob do
         allow_any_instance_of(Octokit::Client).to receive(:followers).with(user.login, per_page: 100).and_return([follower])
         allow_any_instance_of(Octokit::Client).to receive(:following).with(user.login, per_page: 100).and_return([following])
 
+        allow(RepoSurferJob).to receive(:perform_async)
         allow_any_instance_of(Octokit::Client).to receive(:user).with(follower.login).and_return(follower)
         allow_any_instance_of(Octokit::Client).to receive(:followers).with(follower.login, per_page: 100).and_return([])
         allow_any_instance_of(Octokit::Client).to receive(:following).with(follower.login, per_page: 100).and_return([])
@@ -79,23 +81,48 @@ describe UserSurferJob do
         end.to change(Developer, :count).by(3)
       end
 
+      it 'followers are queued to be surfed' do
+        described_class.perform_async(user.login)
+
+        expect(RepoSurferJob).to have_received(:perform_async).with(follower.login)
+        expect(RepoSurferJob).to have_received(:perform_async).with(following.login)
+      end
+
       it 'surf trace records attempted and succeeded states' do
         described_class.perform_async(user.login)
 
-        trace = Trace.where(username: user.login).last
-        expect(trace).to be
-        expect(trace.state).to eq(Enum::TraceState::SUCCEEDED)
+        attempt = Trace.where(name: user.login).first
+        expect(attempt).to be
+        expect(attempt.state).to eq(Enum::TraceState::ATTEMPTED)
+        expect(attempt.resource).to eq(described_class.name)
+
+        success = Trace.where(name: user.login).last
+        expect(success).to be
+        expect(success.state).to eq(Enum::TraceState::SUCCEEDED)
+        expect(success.resource).to eq(described_class.name)
       end
 
-      context 'when resource has been recently visited' do
-        let(:user) { build(:octokit, :user, :recently_visited) }
+      context 'when developer has been recently visited' do
+        let!(:developer) { create(:developer, :recently_visited, username: user.login) }
+
+        it 'skip surfing this user and his follows' do
+          described_class.perform_async(user.login)
+
+          expect(RepoSurferJob).not_to have_received(:perform_async)
+        end
 
         it 'skip surfing this user and adds the trace' do
           described_class.perform_async(user.login)
 
-          trace = Trace.where(username: user.login).last
-          expect(trace).to be
-          expect(trace.state).to eq(Enum::TraceState::SKIPPED)
+          attempt = Trace.where(name: user.login).first
+          expect(attempt).to be
+          expect(attempt.state).to eq(Enum::TraceState::ATTEMPTED)
+          expect(attempt.resource).to eq(described_class.name)
+
+          skip = Trace.where(name: user.login).last
+          expect(skip).to be
+          expect(skip.state).to eq(Enum::TraceState::SKIPPED)
+          expect(skip.resource).to eq(described_class.name)
         end
       end
     end

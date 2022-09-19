@@ -49,6 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.string "name"
     t.string "full_name"
     t.string "owner_name"
+    t.integer "participation"
     t.boolean "private"
     t.string "html_url"
     t.string "homepage"
@@ -74,16 +75,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
   end
 
   create_table "traces", force: :cascade do |t|
-    t.string "username", null: false
+    t.string "name", null: false
     t.string "state", null: false
     t.string "message"
     t.string "resource", null: false
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_traces_on_name"
     t.index ["resource"], name: "index_traces_on_resource"
     t.index ["state"], name: "index_traces_on_state"
-    t.index ["username"], name: "index_traces_on_username"
   end
 
 end

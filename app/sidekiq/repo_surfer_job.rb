@@ -7,36 +7,37 @@ class RepoSurferJob
   prepend JobBenchmarker
   prepend RepoResourceJobTracer
   prepend JobWatcher
-  queue_as :repo_surfer
+  queue_as :repos_surfer
 
-  sidekiq_options queue: :repo_surfer, timeout: 10.hours
+  sidekiq_options queue: :repos_surfer, timeout: 10.hours
 
-  sidekiq_throttle(threshold: { limit: 500, period: 1.hour })
+  sidekiq_throttle(threshold: { limit: 800, period: 1.hour })
 
   def perform(username)
-    user = client.user(username)
-    developer = Developer.find_by!(username: user.login)
+    developer = Developer.find_by!(username:)
 
-    repos = client.repos(developer.username, per_page:)
-    discover(developer, repos)
-
-    paginate(client.last_response) { |repos| discover(developer, repos) }
+    persist(developer, client.repos(developer.username, per_page:))
+    paginate(client.last_response) { |repos| persist(developer, repos) }
   end
 
   private
 
-  def discover(developer, repos)
-    persisted = Repository.where(id: repos.map(&:id))
-    discovered = repos.reject { |repo| persisted.include?(repo) }
+  def persist(developer, repos)
+    discovered = filter_out_existing(repos)
     return if discovered.blank?
 
-    Repository.insert_all(
-      discovered.map do |repo|
-        Repository.build(repo)
-                  .with(owner_name: repo.owner.login, developer_id: developer.id)
-                  .with(visited_at: Time.current)
-                  .attributes
-      end
-    )
+    repositories = discovered.map do |repo|
+      Repository.build(repo)
+                .assign(owner_name: repo.owner.login, developer_id: developer.id)
+                .assign(visited_at: Time.current)
+    end
+    Repository.insert_all(repositories.map(&:attributes), unique_by: :full_name)
+
+    repositories.each { |repo| StatsSurferJob.perform_async(repo.full_name) }
+  end
+
+  def filter_out_existing(repos)
+    existing = Repository.where(id: repos.map(&:id))
+    repos.reject { |repo| existing.include?(repo) }
   end
 end

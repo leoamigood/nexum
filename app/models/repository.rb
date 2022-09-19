@@ -15,7 +15,7 @@ class Repository < ApplicationRecord
     end
   end
 
-  def with(attrs)
+  def assign(attrs)
     attrs.each { |k, v| self[k] = v }
     self
   end

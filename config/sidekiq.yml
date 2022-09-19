@@ -4,5 +4,6 @@
 :timeout: 25
 
 :queues:
-  - [repo_surfer, 4]
-  - [user_surfer, 1]
+  - [repos_surfer, 40]
+  - [users_surfer, 10]
+  - [stats_surfer, 5]

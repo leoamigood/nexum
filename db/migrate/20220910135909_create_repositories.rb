@@ -7,6 +7,7 @@ class CreateRepositories < ActiveRecord::Migration[7.0]
       t.string    :name, index: true
       t.string    :full_name
       t.string    :owner_name, index: true
+      t.integer   :participation, null: true
       t.boolean   :private
       t.string    :html_url
       t.string    :homepage

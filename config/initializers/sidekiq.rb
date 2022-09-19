@@ -12,6 +12,7 @@ Sidekiq.configure_client do |config|
   require 'job_watcher'
   require 'user_surfer_job'
   require 'repo_surfer_job'
+  require 'stats_surfer_job'
 end
 
 Sidekiq.configure_server do |config|
