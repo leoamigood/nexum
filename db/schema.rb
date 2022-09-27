@@ -93,5 +93,4 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_141356) do
     t.index ["state"], name: "index_traces_on_state"
     t.index ["tracer"], name: "index_traces_on_tracer"
   end
-
 end

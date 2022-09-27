@@ -5,11 +5,11 @@ module OctokitResource
 
   DEFAULT_PAGE_SIZE = 100
 
-  PROVIDER_GITHUB = 'github'
+  PROVIDER_GITHUB = "github"
   GITHUB_CREDENTIALS = [
-    'type'     => 'git_source',
-    'host'     => 'github.com',
-    'password' => Rails.application.credentials.github_access_token!
+    "type" => "git_source",
+    "host" => "github.com",
+    "password" => Rails.application.credentials.github_access_token!
   ].freeze
 
   included do

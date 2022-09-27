@@ -14,7 +14,7 @@ module ResourceJobTracer
 
       trace(:succeeded, username)
     end
-  rescue StandardError => e
+  rescue => e
     trace(:failed, username, message: e.message, value: resource)
     raise e
   end
