@@ -6,7 +6,7 @@ class CreateTraces < ActiveRecord::Migration[7.0]
       t.string  :name, index: true, null: false
       t.string  :state, index: true, null: false
       t.string  :message, null: true
-      t.string  :resource, index: true, null: false
+      t.string  :tracer, index: true, null: false
       t.string  :value, null: true
 
       t.timestamps

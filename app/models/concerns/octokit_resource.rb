@@ -5,6 +5,13 @@ module OctokitResource
 
   DEFAULT_PAGE_SIZE = 100
 
+  PROVIDER_GITHUB = 'github'
+  GITHUB_CREDENTIALS = [
+    'type'     => 'git_source',
+    'host'     => 'github.com',
+    'password' => Rails.application.credentials.github_access_token!
+  ].freeze
+
   included do
     def client
       @client ||= OctokitClient.client
@@ -20,7 +27,5 @@ module OctokitResource
         yield last_response.data
       end
     end
-
-    delegate :user, to: :client
   end
 end

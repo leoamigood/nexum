@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'sidekiq/testing'
 
 describe StatsSurferJob do
-  specify { is_expected.to be_processed_in :stats_surfer }
+  specify { is_expected.to be_processed_in :low }
   specify { is_expected.to be_retryable true }
 
   context 'when job is enqueued' do
@@ -28,7 +28,7 @@ describe StatsSurferJob do
       Sidekiq::Testing.fake!
     end
 
-    context 'when repository stats discovered' do
+    context 'when repository discovered' do
       let(:repo) { build(:octokit, :repo) }
 
       before do
@@ -44,7 +44,7 @@ describe StatsSurferJob do
           trace = Trace.where(name: repo.full_name).last
           expect(trace).to be
           expect(trace.state).to eq(Enum::TraceState::SUCCEEDED)
-          expect(trace.resource).to eq(described_class.name)
+          expect(trace.tracer).to eq(described_class.name)
         end
 
         it 'calculates owner participation' do

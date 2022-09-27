@@ -7,11 +7,14 @@ class RepoSurferJob
   prepend JobBenchmarker
   prepend RepoResourceJobTracer
   prepend JobWatcher
-  queue_as :repos_surfer
+  queue_as :high
 
-  sidekiq_options queue: :repos_surfer, timeout: 10.hours
+  sidekiq_options queue: :high
 
-  sidekiq_throttle(threshold: { limit: 800, period: 1.hour })
+  sidekiq_throttle(
+    concurrency: { :limit => 1 },
+    threshold: { limit: 500, period: 1.hour }
+  )
 
   def perform(username)
     developer = Developer.find_by!(username:)
@@ -31,9 +34,12 @@ class RepoSurferJob
                 .assign(owner_name: repo.owner.login, developer_id: developer.id)
                 .assign(visited_at: Time.current)
     end
-    Repository.insert_all(repositories.map(&:attributes), unique_by: :full_name)
+    Repository.insert_all(repositories.map(&:attributes))
 
-    repositories.each { |repo| StatsSurferJob.perform_async(repo.full_name) }
+    repositories.each do |repo|
+      ContentSurferJob.perform_async(repo.full_name)
+      StatsSurferJob.perform_async(repo.full_name)
+    end
   end
 
   def filter_out_existing(repos)

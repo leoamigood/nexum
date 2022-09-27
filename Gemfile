@@ -51,8 +51,23 @@ gem 'bootsnap', require: false
 # gem "image_processing", "~> 1.2"
 
 gem 'chartkick'
+
+gem 'dependabot-common',        github: 'leoamigood/dependabot-core'
+gem 'dependabot-bundler',       github: 'leoamigood/dependabot-core'
+gem 'dependabot-gradle',        github: 'leoamigood/dependabot-core'
+gem 'dependabot-maven',         github: 'leoamigood/dependabot-core'
+gem 'dependabot-python',        github: 'leoamigood/dependabot-core'
+gem 'dependabot-npm_and_yarn',  github: 'leoamigood/dependabot-core'
+gem 'dependabot-go_modules',    github: 'leoamigood/dependabot-core'
+gem 'dependabot-hex',           github: 'leoamigood/dependabot-core'
+gem 'dependabot-composer',      github: 'leoamigood/dependabot-core'
+gem 'dependabot-cargo',         github: 'leoamigood/dependabot-core'
+gem 'dependabot-elm',           github: 'leoamigood/dependabot-core'
+gem 'dependabot-nuget',         github: 'leoamigood/dependabot-core'
+
 gem 'faraday-retry'
 gem 'groupdate'
+gem 'mime-types-data', '3.2021.1115'
 gem 'octokit', '~> 5.0'
 gem 'ruby-enum'
 gem 'sidekiq'
@@ -76,6 +91,14 @@ group :development, :test do
 end
 
 group :development do
+  gem 'rack-mini-profiler'
+
+  # For memory profiling
+  gem 'memory_profiler'
+
+  # For call-stack profiling flamegraphs
+  gem 'stackprof'
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 

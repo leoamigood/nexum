@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_26_141356) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["developer_id", "follower_id"], name: "index_follows_on_developer_id_and_follower_id", unique: true
+  end
+
+  create_table "libraries", id: false, force: :cascade do |t|
+    t.bigint "repository_id"
+    t.string "name", null: false
+    t.string "version"
+    t.string "manager", null: false
   end
 
   create_table "repositories", force: :cascade do |t|
@@ -78,13 +85,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_10_135909) do
     t.string "name", null: false
     t.string "state", null: false
     t.string "message"
-    t.string "resource", null: false
+    t.string "tracer", null: false
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_traces_on_name"
-    t.index ["resource"], name: "index_traces_on_resource"
     t.index ["state"], name: "index_traces_on_state"
+    t.index ["tracer"], name: "index_traces_on_tracer"
   end
 
 end

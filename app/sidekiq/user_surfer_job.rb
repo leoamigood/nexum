@@ -7,11 +7,14 @@ class UserSurferJob
   prepend JobBenchmarker
   prepend UserResourceJobTracer
   prepend JobWatcher
-  queue_as :users_surfer
+  queue_as :medium
 
-  sidekiq_options queue: :users_surfer, timeout: 10.minutes
+  sidekiq_options queue: :medium
 
-  sidekiq_throttle(threshold: { limit: 1000, period: 1.hour })
+  sidekiq_throttle(
+    concurrency: { :limit => 1 },
+    threshold: { limit: 1000, period: 1.hour }
+  )
 
   def perform(username)
     user = client.user(username)

@@ -1,4 +1,5 @@
 # README
+[![DeepSource](https://deepsource.io/gh/leoamigood/nexum.svg/?label=active+issues&show_trend=true&token=VQLN7QMqEVls4leW1aP-kKho)](https://deepsource.io/gh/leoamigood/nexum/?ref=repository-badge)
 
 This README would normally document whatever steps are necessary to get the
 application up and running.

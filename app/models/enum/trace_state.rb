@@ -11,6 +11,8 @@ module Enum
     define :SUCCEEDED,    'succeeded'
     define :SKIPPED,      'skipped'
     define :FAILED,       'failed'
+    define :INFO,         'info'
+    define :WARNING,      'warning'
 
     def self.digest!(value)
       digest_with_error(value, NotAcceptableTraceStateError)
