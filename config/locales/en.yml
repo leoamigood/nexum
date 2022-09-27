@@ -31,4 +31,3 @@
 
 en:
   errors:
-    not_acceptable_trace_state: 'Not acceptable trace action'

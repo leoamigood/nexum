@@ -4,6 +4,6 @@
 :timeout: 25
 
 :queues:
-  - [repos_surfer, 40]
-  - [users_surfer, 10]
-  - [stats_surfer, 5]
+  - [high, 40]
+  - [medium, 10]
+  - [low, 5]

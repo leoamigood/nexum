@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class Trace < ApplicationRecord
+class ProjectError < StandardError
 end

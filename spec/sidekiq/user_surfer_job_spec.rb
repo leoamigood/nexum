@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'sidekiq/testing'
 
 describe UserSurferJob do
-  specify { is_expected.to be_processed_in :users_surfer }
+  specify { is_expected.to be_processed_in :medium }
   specify { is_expected.to be_retryable true }
 
   context 'when job is enqueued' do
@@ -94,12 +94,12 @@ describe UserSurferJob do
         attempt = Trace.where(name: user.login).first
         expect(attempt).to be
         expect(attempt.state).to eq(Enum::TraceState::ATTEMPTED)
-        expect(attempt.resource).to eq(described_class.name)
+        expect(attempt.tracer).to eq(described_class.name)
 
         success = Trace.where(name: user.login).last
         expect(success).to be
         expect(success.state).to eq(Enum::TraceState::SUCCEEDED)
-        expect(success.resource).to eq(described_class.name)
+        expect(success.tracer).to eq(described_class.name)
       end
 
       context 'when developer has been recently visited' do
@@ -117,12 +117,12 @@ describe UserSurferJob do
           attempt = Trace.where(name: user.login).first
           expect(attempt).to be
           expect(attempt.state).to eq(Enum::TraceState::ATTEMPTED)
-          expect(attempt.resource).to eq(described_class.name)
+          expect(attempt.tracer).to eq(described_class.name)
 
           skip = Trace.where(name: user.login).last
           expect(skip).to be
           expect(skip.state).to eq(Enum::TraceState::SKIPPED)
-          expect(skip.resource).to eq(described_class.name)
+          expect(skip.tracer).to eq(described_class.name)
         end
       end
     end

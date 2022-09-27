@@ -15,7 +15,7 @@ module ResourceJobTracer
       trace(:succeeded, username)
     end
   rescue StandardError => e
-    trace(:failed, username, message: e.message, value: e.class.name)
+    trace(:failed, username, message: e.message, value: resource)
     raise e
   end
 
@@ -23,7 +23,7 @@ module ResourceJobTracer
     defined?(super) ? super : false
   end
 
-  def domain
-    NotImplementedError
+  def resource
+    raise NotImplementedError
   end
 end
