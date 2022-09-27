@@ -16,12 +16,12 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'simplecov'
+require "simplecov"
 
-SimpleCov.start 'rails'
+SimpleCov.start "rails"
 
 RSpec.configure do |config|
-  require 'factory_bot_rails'
+  require "factory_bot_rails"
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'sidekiq/web'
-require 'sidekiq/throttled/web'
+require "sidekiq/web"
+require "sidekiq/throttled/web"
 
 Rails.application.routes.draw do
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => "/sidekiq"
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  root 'charts#index'
+  root "charts#index"
 end

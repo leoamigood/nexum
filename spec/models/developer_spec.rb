@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Developer, type: :model do
-  let(:john) { create(:developer, username: 'john') }
-  let(:leo) { create(:developer, username: 'leo') }
-  let(:william) { create(:developer, username: 'william') }
+  let(:john) { create(:developer, username: "john") }
+  let(:leo) { create(:developer, username: "leo") }
+  let(:william) { create(:developer, username: "william") }
 
-  it 'add a follower' do
+  it "add a follower" do
     expect(john.followers.count).to eq(0)
     expect(leo.following.count).to eq(0)
 

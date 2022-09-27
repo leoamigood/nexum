@@ -3,17 +3,17 @@
 class CreateDevelopers < ActiveRecord::Migration[7.0]
   def up
     create_table :developers do |t|
-      t.string    :name, index: true
-      t.string    :username
-      t.string    :email
-      t.string    :avatar_url
-      t.integer   :repos_count
-      t.integer   :followers_count
-      t.integer   :following_count
-      t.string    :company, index: true
-      t.string    :location, index: true
-      t.string    :node_id, index: true
-      t.string    :twitter_username
+      t.string :name, index: true
+      t.string :username
+      t.string :email
+      t.string :avatar_url
+      t.integer :repos_count
+      t.integer :followers_count
+      t.integer :following_count
+      t.string :company, index: true
+      t.string :location, index: true
+      t.string :node_id, index: true
+      t.string :twitter_username
       t.timestamp :visited_at, default: nil
 
       t.timestamps
