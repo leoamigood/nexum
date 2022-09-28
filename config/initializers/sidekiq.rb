@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: 'redis://localhost:6379/1' }
+  config.redis = { url: ENV.fetch('WORKER_REDIS_URL', 'redis://localhost:6379/1') }
 
   require 'octokit_resource'
   require 'tracer'
@@ -17,7 +17,7 @@ Sidekiq.configure_client do |config|
 end
 
 Sidekiq.configure_server do |config|
-  config.redis = { url: 'redis://localhost:6379/1' }
+  config.redis = { url: ENV.fetch('WORKER_REDIS_URL', 'redis://localhost:6379/1') }
 end
 
 require 'sidekiq/throttled'

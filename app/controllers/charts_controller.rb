@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChartsController < ApplicationController
   COMMON_LANGUAGES = %w[JavaScript Ruby C++ C Java Python Java PHP Go].freeze
 

@@ -25,6 +25,6 @@ FactoryBot.define do
   end
 
   trait :recently_visited do
-    visited_at { Traceable::RECENCY_PERIOD.ago + Traceable::RECENCY_PERIOD / 2 }
+    visited_at { Traceable::RECENCY_PERIOD.ago + (Traceable::RECENCY_PERIOD / 2) }
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateDevelopers < ActiveRecord::Migration[7.0]
-  def up
+  def change
     create_table :developers do |t|
       t.string    :name, index: true
       t.string    :username

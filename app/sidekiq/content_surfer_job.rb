@@ -12,8 +12,8 @@ class ContentSurferJob
   sidekiq_options queue: :low
 
   sidekiq_throttle(
-    concurrency: { :limit => 1 },
-    threshold: { limit: 250, period: 1.hour }
+    concurrency: { limit: 1 },
+    threshold:   { limit: 250, period: 1.hour }
   )
 
   def perform(repo_full_name)

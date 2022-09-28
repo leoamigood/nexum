@@ -42,3 +42,5 @@ coverage/
 
 # Dependabot git-credentials store file
 *git.store
+
+/config/credentials/test.key

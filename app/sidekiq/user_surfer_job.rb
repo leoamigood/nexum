@@ -12,8 +12,8 @@ class UserSurferJob
   sidekiq_options queue: :medium
 
   sidekiq_throttle(
-    concurrency: { :limit => 1 },
-    threshold: { limit: 1000, period: 1.hour }
+    concurrency: { limit: 1 },
+    threshold:   { limit: 1000, period: 1.hour }
   )
 
   def perform(username)

@@ -27,7 +27,7 @@ class CreateRepositories < ActiveRecord::Migration[7.0]
       t.timestamp :visited_at, default: nil
 
       t.timestamps
-      t.index     :full_name, unique: true
+      t.index :full_name, unique: true
     end
   end
 end

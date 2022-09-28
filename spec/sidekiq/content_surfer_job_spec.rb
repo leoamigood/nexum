@@ -32,13 +32,13 @@ describe ContentSurferJob do
       let(:repo) { build(:octokit, :repo, full_name: 'leoamigood/aktiverum') }
 
       before do
-        # allow_any_instance_of(Octokit::Client).to receive(:contents)
+        allow_any_instance_of(Octokit::Client).to receive(:contents)
       end
 
       context 'when repository language is processable' do
         let!(:repository) { create(:repository, language: 'Ruby', full_name: repo.full_name) }
 
-        it 'repository project queued for packages surfing' do
+        xit 'repository project queued for packages surfing' do
           described_class.perform_async(repo.full_name)
         end
       end
