@@ -53,6 +53,7 @@ jobs:
         run: bundle exec rubocop --parallel
 
   build:
+    needs: [test, lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

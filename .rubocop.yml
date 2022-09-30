@@ -7,6 +7,7 @@ AllCops:
     - 'tmp/**/*'
     - 'db/schema.rb'
     - 'vendor/bundle/**/*'
+    - 'dependabot/**/*'
 
 require:
   - rubocop-performance

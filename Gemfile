@@ -111,8 +111,12 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem 'capybara'
-  gem 'minitest', '~> 5.16'
+  # gem 'capybara'
+  # gem 'minitest', '~> 5.16'
+  # gem 'rspec', '~> 3.8'
+  # gem 'rspec-its', '~> 1.2'
+  # gem 'vcr', '= 6.1'
+  # gem 'webmock', '~> 3.4'
   gem 'rspec-sidekiq'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false
