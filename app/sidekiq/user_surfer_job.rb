@@ -12,7 +12,7 @@ class UserSurferJob
 
   sidekiq_throttle(
     concurrency: { limit: 1 },
-    threshold:   { limit: 500, period: 1.hour }
+    threshold:   { limit: 250, period: 1.hour }
   )
 
   def perform(username)

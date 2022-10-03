@@ -3,7 +3,7 @@
 module Traceable
   extend ActiveSupport::Concern
 
-  RECENCY_PERIOD = 7.days
+  RECENCY_PERIOD = 1.year
 
   included do
     scope :recent, -> { where('visited_at > ?', RECENCY_PERIOD.ago) }

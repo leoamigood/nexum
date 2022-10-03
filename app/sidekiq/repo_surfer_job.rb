@@ -25,24 +25,18 @@ class RepoSurferJob
   private
 
   def persist(developer, repos)
-    discovered = filter_out_existing(repos)
-    return if discovered.blank?
+    return if repos.blank?
 
-    repositories = discovered.map do |repo|
+    repositories = repos.map do |repo|
       Repository.build(repo)
                 .assign(owner_name: repo.owner.login, developer_id: developer.id)
                 .assign(visited_at: Time.current)
     end
     Repository.insert_all(repositories.map(&:attributes))
 
-    repositories.each do |repo|
+    repositories.reject(&:fork).each do |repo|
       ContentSurferJob.perform_async(repo.full_name)
       StatsSurferJob.perform_async(repo.full_name)
     end
-  end
-
-  def filter_out_existing(repos)
-    existing = Repository.where(id: repos.map(&:id))
-    repos.reject { |repo| existing.include?(repo) }
   end
 end
