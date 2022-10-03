@@ -67,6 +67,7 @@ gem 'dependabot-nuget',         github: 'leoamigood/dependabot-core'
 
 gem 'faraday-retry'
 gem 'groupdate'
+gem 'rack-mini-profiler'
 gem 'mime-types-data', '3.2021.1115'
 gem 'octokit', '~> 5.0'
 gem 'ruby-enum'
@@ -91,8 +92,6 @@ group :development, :test do
 end
 
 group :development do
-  gem 'rack-mini-profiler'
-
   # For memory profiling
   gem 'memory_profiler'
 
@@ -111,12 +110,6 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  # gem 'capybara'
-  # gem 'minitest', '~> 5.16'
-  # gem 'rspec', '~> 3.8'
-  # gem 'rspec-its', '~> 1.2'
-  # gem 'vcr', '= 6.1'
-  # gem 'webmock', '~> 3.4'
   gem 'rspec-sidekiq'
   gem 'selenium-webdriver'
   gem 'simplecov', require: false

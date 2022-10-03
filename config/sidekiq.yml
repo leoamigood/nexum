@@ -4,6 +4,6 @@
 :timeout: 25
 
 :queues:
-  - [high, 40]
-  - [medium, 10]
-  - [low, 5]
+  - high
+  - medium
+  - low

@@ -7,13 +7,12 @@ class RepoSurferJob
   prepend JobBenchmarker
   prepend RepoResourceJobTracer
   prepend JobWatcher
-  queue_as :high
 
-  sidekiq_options queue: :high
+  sidekiq_options queue: :medium
 
   sidekiq_throttle(
     concurrency: { limit: 1 },
-    threshold:   { limit: 1000, period: 1.hour }
+    threshold:   { limit: 500, period: 1.hour }
   )
 
   def perform(username)

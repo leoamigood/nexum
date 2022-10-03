@@ -20,6 +20,4 @@ cp -r \
 
 cd "$install_dir"
 
-#bundle config --local path ".bundle"
-#bundle config --local without "test"
 bundle install

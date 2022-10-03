@@ -7,9 +7,8 @@ class UserSurferJob
   prepend JobBenchmarker
   prepend UserResourceJobTracer
   prepend JobWatcher
-  queue_as :medium
 
-  sidekiq_options queue: :medium
+  sidekiq_options queue: :low
 
   sidekiq_throttle(
     concurrency: { limit: 1 },

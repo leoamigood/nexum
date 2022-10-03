@@ -4,7 +4,7 @@ require 'rails_helper'
 require 'sidekiq/testing'
 
 describe UserSurferJob do
-  specify { is_expected.to be_processed_in :medium }
+  specify { is_expected.to be_processed_in :low }
   specify { is_expected.to be_retryable true }
 
   context 'when job is enqueued' do

@@ -7,13 +7,12 @@ class ContentSurferJob
   include Tracer
   prepend JobBenchmarker
   prepend JobWatcher
-  queue_as :low
 
-  sidekiq_options queue: :low
+  sidekiq_options queue: :high
 
   sidekiq_throttle(
     concurrency: { limit: 1 },
-    threshold:   { limit: 500, period: 1.hour }
+    threshold:   { limit: 1500, period: 1.hour }
   )
 
   def perform(repo_full_name)
