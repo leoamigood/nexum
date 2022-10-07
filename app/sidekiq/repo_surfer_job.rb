@@ -10,10 +10,7 @@ class RepoSurferJob
 
   sidekiq_options queue: :medium
 
-  sidekiq_throttle(
-    concurrency: { limit: 1 },
-    threshold:   { limit: 500, period: 1.hour }
-  )
+  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
   def perform(username)
     developer = Developer.find_by!(username:)

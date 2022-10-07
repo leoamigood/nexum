@@ -2,22 +2,16 @@
 
 Sidekiq.configure_client do |config|
   config.redis = { url: ENV.fetch('WORKER_REDIS_URL', 'redis://localhost:6379/1') }
-
-  require 'octokit_resource'
-  require 'tracer'
-  require 'job_benchmarker'
-  require 'resource_job_tracer'
-  require 'user_resource_job_tracer'
-  require 'repo_resource_job_tracer'
-  require 'job_watcher'
-  require 'user_surfer_job'
-  require 'repo_surfer_job'
-  require 'stats_surfer_job'
-  require 'content_surfer_job'
 end
 
 Sidekiq.configure_server do |config|
   config.redis = { url: ENV.fetch('WORKER_REDIS_URL', 'redis://localhost:6379/1') }
+
+  config.on(:startup) do
+    schedule_file = 'config/schedule.yml'
+
+    Sidekiq::Cron::Job.load_from_hash YAML.load_file(schedule_file) if File.exist?(schedule_file)
+  end
 end
 
 require 'sidekiq/throttled'

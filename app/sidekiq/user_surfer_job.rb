@@ -10,10 +10,7 @@ class UserSurferJob
 
   sidekiq_options queue: :low
 
-  sidekiq_throttle(
-    concurrency: { limit: 1 },
-    threshold:   { limit: 250, period: 1.hour }
-  )
+  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
   def perform(username)
     user = client.user(username)

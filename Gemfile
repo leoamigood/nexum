@@ -72,6 +72,7 @@ gem 'mime-types-data', '3.2021.1115'
 gem 'octokit', '~> 5.0'
 gem 'ruby-enum'
 gem 'sidekiq'
+gem 'sidekiq-cron'
 gem 'sidekiq-throttled', github: 'ixti/sidekiq-throttled'
 
 gem 'bundler-audit', require: false

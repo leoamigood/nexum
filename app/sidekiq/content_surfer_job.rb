@@ -8,12 +8,9 @@ class ContentSurferJob
   prepend JobBenchmarker
   prepend JobWatcher
 
-  sidekiq_options queue: :high
+  sidekiq_options queue: :high, retry: 3
 
-  sidekiq_throttle(
-    concurrency: { limit: 1 },
-    threshold:   { limit: 1500, period: 1.hour }
-  )
+  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
   def perform(repo_full_name)
     repository = Repository.find_by!(full_name: repo_full_name)

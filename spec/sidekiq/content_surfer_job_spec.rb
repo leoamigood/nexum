@@ -5,7 +5,7 @@ require 'sidekiq/testing'
 
 describe ContentSurferJob do
   specify { is_expected.to be_processed_in :high }
-  specify { is_expected.to be_retryable true }
+  specify { is_expected.to be_retryable 3 }
 
   context 'when job is enqueued' do
     before do
