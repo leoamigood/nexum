@@ -3,7 +3,7 @@
 class RateLimitJob
   include Sidekiq::Job
   include OctokitResource
-  queue_as :critical
+  queue_as ENV.fetch('RATE_QUEUE', :critical)
 
   sidekiq_options retry: false
 

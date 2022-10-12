@@ -4,7 +4,7 @@
 :timeout: 25
 
 :queues:
-  - critical
+  - critical-2
   - high
   - medium
   - low

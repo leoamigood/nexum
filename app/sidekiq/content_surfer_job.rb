@@ -10,7 +10,7 @@ class ContentSurferJob
 
   sidekiq_options queue: :high, retry: 3
 
-  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
+  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 2 } })
 
   def perform(repo_full_name)
     repository = Repository.find_by!(full_name: repo_full_name)
@@ -32,10 +32,10 @@ class ContentSurferJob
       filenames = client.contents(repository.full_name).map(&:name)
       raise DependenciesResolveError, fetcher_class.required_files_message unless fetcher_class.required_files_in?(filenames)
 
-      source = Dependabot::Source.new(provider: PROVIDER_GITHUB, repo: repository.full_name)
-      dependency_files = fetcher_class.new(source:, credentials: OctokitResource::GITHUB_CREDENTIALS).files
+      source = Dependabot::Source.new(provider: OctokitClient::PROVIDER_GITHUB, repo: repository.full_name)
+      dependency_files = fetcher_class.new(source:, credentials: OctokitClient::GITHUB_CREDENTIALS).files
 
-      source = Dependabot::Source.new(provider: PROVIDER_GITHUB, repo: repository.full_name)
+      source = Dependabot::Source.new(provider: OctokitClient::PROVIDER_GITHUB, repo: repository.full_name)
       parser = parser_class.new(dependency_files:, source:)
 
       parser.parse

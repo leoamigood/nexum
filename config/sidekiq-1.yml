@@ -1,0 +1,10 @@
+---
+:verbose: true
+:concurrency: <%= ENV.fetch('SIDEKIQ_CONCURRENCY') { 5 } %>
+:timeout: 25
+
+:queues:
+  - critical-1
+  - high
+  - medium
+  - low
