@@ -5,7 +5,7 @@ class RepoSurferJob
   include Sidekiq::Throttled::Job
   include OctokitResource
   prepend JobBenchmarker
-  prepend RepoResourceJobTracer
+  prepend ResourceJobTracer
   prepend JobWatcher
 
   sidekiq_options queue: :medium

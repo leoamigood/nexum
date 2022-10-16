@@ -33,22 +33,21 @@ describe UserSurferJob do
         allow_any_instance_of(Octokit::Client).to receive(:user).and_raise(Octokit::NotFound)
       end
 
+      let(:username) { 'not_found_username' }
+
       it 'user surfer job finishes fast' do
         expect do
-          described_class.perform_async('not_found_username')
+          described_class.perform_async(username)
         end.to avoid_changing(Developer, :count).and raise_error(Octokit::NotFound)
       end
 
       it 'surf trace records failed state' do
-        expect do
-          expect { described_class.perform_async('not_found_username') }.to raise_error(Octokit::NotFound)
+        expect { described_class.perform_async(username) }.to raise_error(Octokit::NotFound)
 
-          trace = Trace.last
-          expect(trace.value).to eq('not_found_username')
-          expect(trace.state).to eq(Enum::TraceState::FAILED)
-          expect(trace.message).to eq('Octokit::NotFound')
-          expect(trace.resource).to eq(described_class.name)
-        end
+        expect(Trace.find_by(name: username, state: Enum::TraceState::ATTEMPTED)).to be_traced
+        expect(Trace.find_by(name: username, state: Enum::TraceState::SKIPPED)).not_to be_traced
+        expect(Trace.find_by(name: username, state: Enum::TraceState::SUCCEEDED)).not_to be_traced
+        expect(Trace.find_by(name: username, state: Enum::TraceState::FAILED)).to be_traced(value: 'not_found_username', message: 'Octokit::NotFound')
       end
     end
 
@@ -91,15 +90,10 @@ describe UserSurferJob do
       it 'surf trace records attempted and succeeded states' do
         described_class.perform_async(user.login)
 
-        attempt = Trace.where(name: user.login).first
-        expect(attempt).to be
-        expect(attempt.state).to eq(Enum::TraceState::ATTEMPTED)
-        expect(attempt.tracer).to eq(described_class.name)
-
-        success = Trace.where(name: user.login).last
-        expect(success).to be
-        expect(success.state).to eq(Enum::TraceState::SUCCEEDED)
-        expect(success.tracer).to eq(described_class.name)
+        expect(Trace.find_by(name: user.login, state: Enum::TraceState::ATTEMPTED)).to be_traced
+        expect(Trace.find_by(name: user.login, state: Enum::TraceState::SKIPPED)).not_to be_traced
+        expect(Trace.find_by(name: user.login, state: Enum::TraceState::SUCCEEDED)).to be_traced
+        expect(Trace.find_by(name: user.login, state: Enum::TraceState::FAILED)).not_to be_traced
       end
 
       context 'when developer has been recently visited' do
@@ -114,15 +108,10 @@ describe UserSurferJob do
         it 'skip surfing this user and adds the trace' do
           described_class.perform_async(user.login)
 
-          attempt = Trace.where(name: user.login).first
-          expect(attempt).to be
-          expect(attempt.state).to eq(Enum::TraceState::ATTEMPTED)
-          expect(attempt.tracer).to eq(described_class.name)
-
-          skip = Trace.where(name: user.login).last
-          expect(skip).to be
-          expect(skip.state).to eq(Enum::TraceState::SKIPPED)
-          expect(skip.tracer).to eq(described_class.name)
+          expect(Trace.find_by(name: user.login, state: Enum::TraceState::ATTEMPTED)).to be_traced
+          expect(Trace.find_by(name: user.login, state: Enum::TraceState::SKIPPED)).to be_traced
+          expect(Trace.find_by(name: user.login, state: Enum::TraceState::SUCCEEDED)).not_to be_traced
+          expect(Trace.find_by(name: user.login, state: Enum::TraceState::FAILED)).not_to be_traced
         end
       end
     end

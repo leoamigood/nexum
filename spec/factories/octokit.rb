@@ -18,9 +18,19 @@ FactoryBot.define do
     end
 
     trait :repo do
+      id          { FFaker::Random.rand(1_000_000) }
       name        { FFaker::Lorem.word.downcase }
       owner_name  { FFaker::Internet.user_name }
       full_name   { "#{owner_name}/#{name}" }
+      owner       { OpenStruct.new(login: owner_name) }
+      created_at  { FFaker::Time.between(10.years.ago, 1.year.ago) }
+      updated_at  { FFaker::Time.between(created_at, 1.day.ago) }
+      attrs       { { id:, name:, owner_name:, full_name:, created_at:, updated_at: } }
+    end
+
+    trait :forked do
+      fork        { true }
+      attrs       { { id:, name:, owner_name:, full_name:, created_at:, updated_at:, fork: } }
     end
   end
 

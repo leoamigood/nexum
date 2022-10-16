@@ -6,6 +6,7 @@ class ContentSurferJob
   include OctokitResource
   include Tracer
   prepend JobBenchmarker
+  prepend ResourceJobTracer
   prepend JobWatcher
 
   sidekiq_options queue: :high, retry: 3

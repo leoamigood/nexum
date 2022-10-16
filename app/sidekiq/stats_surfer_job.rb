@@ -5,7 +5,7 @@ class StatsSurferJob
   include Sidekiq::Throttled::Job
   include OctokitResource
   prepend JobBenchmarker
-  prepend RepoResourceJobTracer
+  prepend ResourceJobTracer
   prepend JobWatcher
 
   sidekiq_options queue: :high, retry: 3
@@ -21,9 +21,5 @@ class StatsSurferJob
     repository.save!
   rescue Octokit::UnavailableForLegalReasons => e
     trace(:failed, repo_full_name, message: e.message, value: resource)
-  end
-
-  def ignore_recency?
-    true
   end
 end

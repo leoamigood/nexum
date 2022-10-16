@@ -8,8 +8,8 @@
 <br/>
 <%= column_chart @keywords, title: 'Keywords popularity' %>
 <br/>
-<%= area_chart Developer.group_by_hour(:visited_at).count, title: 'Developers processed hourly', colors: %w[#bd0 #666], thousands: "," %>
+<%= area_chart Developer.group_by_day(:visited_at).count, title: 'Developers processed daily', colors: %w[#bd0 #666], thousands: "," %>
 <%= area_chart @developers, title: 'Cumulative developers processed', curve: false, thousands: "," %>
 <br/>
-<%= area_chart Repository.group_by_hour(:visited_at).count, title: 'Repositories processed hourly', colors: %w[#bd0 #666], thousands: "," %>
+<%= area_chart Repository.group_by_day(:visited_at).count, title: 'Repositories processed daily', colors: %w[#bd0 #666], thousands: "," %>
 <%= area_chart @repositories, title: 'Cumulative repositories processed', curve: false, thousands: "," %>

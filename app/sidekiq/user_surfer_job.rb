@@ -5,7 +5,7 @@ class UserSurferJob
   include Sidekiq::Throttled::Job
   include OctokitResource
   prepend JobBenchmarker
-  prepend UserResourceJobTracer
+  prepend ResourceJobTracer
   prepend JobWatcher
 
   sidekiq_options queue: :low
@@ -13,6 +13,8 @@ class UserSurferJob
   sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
   def perform(username)
+    raise SkipSurfException if Developer.recently_visited?(username)
+
     user = client.user(username)
     developer = Developer.persist!(user)
 

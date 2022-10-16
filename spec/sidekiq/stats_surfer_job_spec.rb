@@ -38,13 +38,11 @@ describe StatsSurferJob do
       context 'when repository has been recently visited' do
         let!(:repository) { create(:repository, :recently_visited, full_name: repo.full_name) }
 
-        it 'ignore recency and surf this repo' do
+        it 'ignore recently visited and surf repo' do
           described_class.perform_async(repo.full_name)
 
-          trace = Trace.where(name: repo.full_name).last
-          expect(trace).to be
-          expect(trace.state).to eq(Enum::TraceState::SUCCEEDED)
-          expect(trace.tracer).to eq(described_class.name)
+          expect(Trace.find_by(name: repo.full_name, state: Enum::TraceState::SKIPPED)).not_to be_traced
+          expect(Trace.find_by(name: repo.full_name, state: Enum::TraceState::SUCCEEDED)).to be_traced
         end
 
         it 'calculates owner participation' do

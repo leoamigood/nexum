@@ -3,27 +3,14 @@
 module ResourceJobTracer
   include Tracer
 
-  def perform(username)
-    trace(:attempted, username)
-    if resource.recently_visited?(username) && !ignore_recency?
-      trace(:skipped, username)
-    else
-      trace(:in_progress, username)
-
-      super(username)
-
-      trace(:succeeded, username)
-    end
+  def perform(name)
+    trace(:attempted, name)
+    super(name)
+    trace(:succeeded, name)
+  rescue SkipSurfException
+    trace(:skipped, name)
   rescue StandardError => e
-    trace(:failed, username, message: e.message, value: resource)
+    trace(:failed, name, message: e.message)
     raise e
-  end
-
-  def ignore_recency?
-    defined?(super) ? super : false
-  end
-
-  def resource
-    raise NotImplementedError
   end
 end
