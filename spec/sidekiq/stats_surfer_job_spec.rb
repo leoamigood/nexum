@@ -28,9 +28,9 @@ describe StatsSurferJob do
       Sidekiq::Testing.fake!
     end
 
-    context 'when repository discovered' do
-      let(:repo) { build(:octokit, :repo) }
+    let(:repo) { build(:octokit, :repo) }
 
+    context 'when repository discovered' do
       before do
         allow_any_instance_of(Octokit::Client).to receive(:participation_stats).and_return(OpenStruct.new(owner: [0, 1, 5]))
       end
@@ -51,6 +51,21 @@ describe StatsSurferJob do
             repository.reload
           end.to change(repository, :participation).to(6)
         end
+      end
+    end
+
+    context 'when repository is not available for legal reasons' do
+      before do
+        allow_any_instance_of(Octokit::Client).to receive(:participation_stats).and_raise(Octokit::UnavailableForLegalReasons)
+      end
+
+      let!(:repository) { create(:repository, full_name: repo.full_name) }
+
+      it 'trace with warning status is logged' do
+        described_class.perform_async(repo.full_name)
+
+        expect(Trace.find_by(name: repo.full_name, state: Enum::TraceState::WARNING)).to be_traced(value: Octokit::UnavailableForLegalReasons.name)
+        expect(Trace.find_by(name: repo.full_name, state: Enum::TraceState::SUCCEEDED)).to be_traced
       end
     end
   end

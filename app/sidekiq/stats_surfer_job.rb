@@ -20,6 +20,6 @@ class StatsSurferJob
     repository.participation = stats.owner.sum
     repository.save!
   rescue Octokit::UnavailableForLegalReasons => e
-    trace(:failed, repo_full_name, message: e.message, value: resource)
+    trace(:warning, repo_full_name, message: e.message, value: e.class.name)
   end
 end

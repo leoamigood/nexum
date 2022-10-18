@@ -24,7 +24,7 @@ class ContentSurferJob
     end
     Library.insert_all(libraries.map(&:attributes)) if libraries.present?
   rescue ProjectError => e
-    trace(:warning, repository.full_name, message: e.message, value: repository.language)
+    trace(:warning, repository.full_name, message: e.message, value: e.class.name)
   end
 
   def resolve_dependencies(repository)
@@ -40,36 +40,38 @@ class ContentSurferJob
       parser = parser_class.new(dependency_files:, source:)
 
       parser.parse
-    rescue ProjectError, Dependabot::DependabotError => e
-      trace(:warning, repository.full_name, message: e.message, value: repository.language)
+    rescue StandardError, Dependabot::DependabotError => e
+      trace(:warning, repository.full_name, message: e.message, value: e.class.name)
       []
     end
   end
 
+  private
+
   def resolve_processors(repository)
     case repository.language
-    when 'Ruby'
+    when Enum::Language::RUBY
       [[Dependabot::Bundler::FileFetcher, Dependabot::Bundler::FileParser]]
-    when 'Python'
+    when Enum::Language::PYTHON
       [[Dependabot::Python::FileFetcher, Dependabot::Python::FileParser]]
-    when 'JavaScript'
+    when Enum::Language::JAVASCRIPT
       [[Dependabot::NpmAndYarn::FileFetcher, Dependabot::NpmAndYarn::FileParser]]
-    when 'Go'
+    when Enum::Language::GO
       [[Dependabot::GoModules::FileFetcher, Dependabot::GoModules::FileParser]]
-    when 'Java'
+    when Enum::Language::JAVA
       [
         [Dependabot::Gradle::FileFetcher, Dependabot::Gradle::FileParser],
         [Dependabot::Maven::FileFetcher, Dependabot::Maven::FileParser]
       ]
-    when 'C#'
+    when Enum::Language::C_SHARP
       [[Dependabot::Nuget::FileFetcher, Dependabot::Nuget::FileParser]]
-    when 'Elixir'
+    when Enum::Language::ELIXIR
       [[Dependabot::Hex::FileFetcher, Dependabot::Hex::FileParser]]
-    when 'PHP'
+    when Enum::Language::PHP
       [[Dependabot::Composer::FileFetcher, Dependabot::Composer::FileParser]]
-    when 'Rust'
+    when Enum::Language::RUST
       [[Dependabot::Cargo::FileFetcher, Dependabot::Cargo::FileParser]]
-    when 'Elm'
+    when Enum::Language::ELM
       [[Dependabot::Elm::FileFetcher, Dependabot::Elm::FileParser]]
     else
       raise DependenciesResolveError, repository.language

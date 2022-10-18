@@ -23,6 +23,7 @@ FactoryBot.define do
       owner_name  { FFaker::Internet.user_name }
       full_name   { "#{owner_name}/#{name}" }
       owner       { OpenStruct.new(login: owner_name) }
+      language    { Enum::Language.values.sample }
       created_at  { FFaker::Time.between(10.years.ago, 1.year.ago) }
       updated_at  { FFaker::Time.between(created_at, 1.day.ago) }
       attrs       { { id:, name:, owner_name:, full_name:, created_at:, updated_at: } }
