@@ -17,20 +17,28 @@ class ChartsController < ApplicationController
     @technologies = ActiveRecord::Base.connection.execute(sql).values
 
     sql = %{
-      SELECT to_char(visited_at, 'YYYY-MM-DD'), SUM(count(*)) OVER (ORDER BY to_char(visited_at, 'YYYY-MM-DD'))
-      FROM developers
-      WHERE visited_at IS NOT NULL
-      GROUP BY to_char(visited_at, 'YYYY-MM-DD')
-      ORDER BY to_char(visited_at, 'YYYY-MM-DD')
+      SELECT * FROM (
+        SELECT to_char(visited_at, 'YYYY-MM-DD') visited_date, SUM(count(*)) OVER (ORDER BY to_char(visited_at, 'YYYY-MM-DD'))
+        FROM developers
+        WHERE visited_at IS NOT NULL
+        GROUP BY to_char(visited_at, 'YYYY-MM-DD')
+        ORDER BY to_char(visited_at, 'YYYY-MM-DD') DESC
+        LIMIT 14
+      ) developers
+      ORDER BY visited_date ASC
     }
     @developers = ActiveRecord::Base.connection.execute(sql).values
 
     sql = %{
-      SELECT to_char(visited_at, 'YYYY-MM-DD'), SUM(count(*)) OVER (ORDER BY to_char(visited_at, 'YYYY-MM-DD'))
-      FROM repositories
-      WHERE visited_at IS NOT NULL
-      GROUP BY to_char(visited_at, 'YYYY-MM-DD')
-      ORDER BY to_char(visited_at, 'YYYY-MM-DD')
+      SELECT * FROM (
+        SELECT to_char(visited_at, 'YYYY-MM-DD') visited_date, SUM(count(*)) OVER (ORDER BY to_char(visited_at, 'YYYY-MM-DD'))
+        FROM repositories
+        WHERE visited_at IS NOT NULL
+        GROUP BY to_char(visited_at, 'YYYY-MM-DD')
+        ORDER BY to_char(visited_at, 'YYYY-MM-DD') DESC
+        LIMIT 14
+      ) repositories
+      ORDER BY visited_date ASC
     }
     @repositories = ActiveRecord::Base.connection.execute(sql).values
 
