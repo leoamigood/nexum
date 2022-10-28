@@ -24,9 +24,10 @@ FactoryBot.define do
       full_name   { "#{owner_name}/#{name}" }
       owner       { OpenStruct.new(login: owner_name) }
       language    { Enum::Language.values.sample }
+      description { FFaker::Lorem.sentence }
       created_at  { FFaker::Time.between(10.years.ago, 1.year.ago) }
       updated_at  { FFaker::Time.between(created_at, 1.day.ago) }
-      attrs       { { id:, name:, owner_name:, full_name:, created_at:, updated_at: } }
+      attrs       { { id:, name:, owner_name:, full_name:, description:, created_at:, updated_at: } }
     end
 
     trait :forked do

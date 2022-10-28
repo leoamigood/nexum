@@ -57,6 +57,19 @@ describe RepoSurferJob do
           expect(Trace.find_by(name: developer.username, state: Enum::TraceState::FAILED)).not_to be_traced
         end
 
+        context 'fields include values requiring sanitation' do
+          let(:repos) { [build(:octokit, :repo, description: "Unprocessable null value \u0000")] }
+
+          it 'repository surf job succeeded' do
+            described_class.perform_async(developer.username)
+
+            expect(Trace.find_by(name: developer.username, state: Enum::TraceState::ATTEMPTED)).to be_traced
+            expect(Trace.find_by(name: developer.username, state: Enum::TraceState::SKIPPED)).not_to be_traced
+            expect(Trace.find_by(name: developer.username, state: Enum::TraceState::SUCCEEDED)).to be_traced
+            expect(Trace.find_by(name: developer.username, state: Enum::TraceState::FAILED)).not_to be_traced
+          end
+        end
+
         context 'includes forked repo' do
           let(:forked) { build(:octokit, :repo, :forked) }
 

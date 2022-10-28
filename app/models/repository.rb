@@ -5,6 +5,8 @@ class Repository < ApplicationRecord
 
   belongs_to :developer
 
+  after_initialize :sanitize
+
   class << self
     def build(repo)
       Repository.new(repo.attrs.select { |attr| column_names.include?(attr.to_s) })
@@ -13,6 +15,11 @@ class Repository < ApplicationRecord
     def recently_visited?(full_name)
       recent.where(full_name:).present?
     end
+  end
+
+  def sanitize
+    SanitationUtils.sanitize_model(self)
+    self
   end
 
   def assign(attrs)
