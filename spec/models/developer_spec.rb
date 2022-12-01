@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Developer, type: :model do
+describe Developer do
   let(:john) { create(:developer, username: 'john') }
   let(:leo) { create(:developer, username: 'leo') }
   let(:william) { create(:developer, username: 'william') }

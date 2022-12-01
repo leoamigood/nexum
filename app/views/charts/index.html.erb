@@ -1,15 +1,5 @@
-<%= line_chart @repos_by_language.group(:language).group_by_year(:created_at).count, title: 'Repositories created per year' %>
-<br/>
-<%= bar_chart @users_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Languages popularity' %>
-<br/>
-<%= pie_chart @repos_by_language.group(:language).order('COUNT(language) DESC').count, title: 'Repositories by language' %>
-<br/>
-<%= column_chart @technologies, title: 'Technologies popularity' %>
-<br/>
-<%= column_chart @keywords, title: 'Keywords popularity' %>
-<br/>
-<%= area_chart Developer.group_by_day(:visited_at).count, title: 'Developers processed daily', xmin: 2.week.ago, colors: %w[#bd0 #666], thousands: "," %>
+<%= area_chart @daily_devs, title: 'Developers processed daily', colors: %w[#bd0 #666], thousands: "," %>
 <%= area_chart @developers, title: 'Cumulative developers processed', curve: false, thousands: "," %>
 <br/>
-<%= area_chart Repository.group_by_day(:visited_at).count, title: 'Repositories processed daily', xmin: 2.week.ago, colors: %w[#bd0 #666], thousands: "," %>
+<%= area_chart @daily_repos, title: 'Repositories processed daily', colors: %w[#bd0 #666], thousands: "," %>
 <%= area_chart @repositories, title: 'Cumulative repositories processed', curve: false, thousands: "," %>

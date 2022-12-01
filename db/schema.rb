@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_26_141356) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_17_165829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_141356) do
     t.index ["name"], name: "index_developers_on_name"
     t.index ["node_id"], name: "index_developers_on_node_id"
     t.index ["username"], name: "index_developers_on_username", unique: true
+    t.index ["visited_at"], name: "index_developers_on_visited_at"
   end
 
   create_table "follows", force: :cascade do |t|
@@ -78,9 +79,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_26_141356) do
     t.datetime "visited_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["developer_id"], name: "index_repositories_on_developer_id"
     t.index ["full_name"], name: "index_repositories_on_full_name", unique: true
+    t.index ["language"], name: "index_repositories_on_language"
     t.index ["name"], name: "index_repositories_on_name"
     t.index ["owner_name"], name: "index_repositories_on_owner_name"
+    t.index ["visited_at"], name: "index_repositories_on_visited_at"
   end
 
   create_table "traces", force: :cascade do |t|

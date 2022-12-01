@@ -20,4 +20,5 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root 'charts#index'
+  get 'stats', action: 'stats', controller: 'charts'
 end
