@@ -71,7 +71,7 @@ gem 'rack-mini-profiler'
 gem 'mime-types-data', '3.2021.1115'
 gem 'octokit', '~> 5.0'
 gem 'ruby-enum'
-gem 'sidekiq'
+gem 'sidekiq', '~> 6.5'
 gem 'sidekiq-cron'
 gem 'sidekiq-throttled', github: 'ixti/sidekiq-throttled'
 
