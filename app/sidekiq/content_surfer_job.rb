@@ -9,7 +9,8 @@ class ContentSurferJob
   prepend ResourceJobTracer
   prepend JobWatcher
 
-  sidekiq_options queue: :high, retry: 3
+  sidekiq_options queue: :high, retry: 3, timeout: 15.minutes,
+                  lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
   sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 2 } })
 

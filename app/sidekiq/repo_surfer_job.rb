@@ -8,7 +8,7 @@ class RepoSurferJob
   prepend ResourceJobTracer
   prepend JobWatcher
 
-  sidekiq_options queue: :medium
+  sidekiq_options queue: :medium, timeout: 30.minutes
 
   sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
