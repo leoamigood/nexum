@@ -297,6 +297,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
+    rollbar (3.3.3)
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
     rspec-expectations (3.12.1)
@@ -443,6 +444,7 @@ DEPENDENCIES
   rack-mini-profiler
   rails (~> 7.0.3, >= 7.0.3.1)
   redis (~> 4.0)
+  rollbar
   rspec-json_expectations
   rspec-rails (~> 5.1)
   rspec-sidekiq
