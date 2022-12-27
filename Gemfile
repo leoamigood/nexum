@@ -75,6 +75,7 @@ gem 'ruby-enum'
 gem 'sidekiq', '~> 6.5'
 gem 'sidekiq-cron'
 gem 'sidekiq-throttled', github: 'ixti/sidekiq-throttled'
+gem 'sidekiq-unique-jobs', '~> 7.0'
 
 gem 'bundler-audit', require: false
 gem 'rubocop-performance', require: false

@@ -8,7 +8,8 @@ class StatsSurferJob
   prepend ResourceJobTracer
   prepend JobWatcher
 
-  sidekiq_options queue: :high, retry: 3, timeout: 5.minutes
+  sidekiq_options queue: :high, retry: 3, timeout: 5.minutes,
+                  lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
   sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : ENV.fetch('SIDEKIQ_CONCURRENCY', 5) } })
 
