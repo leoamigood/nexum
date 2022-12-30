@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_17_165829) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_30_133231) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -99,5 +99,24 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_17_165829) do
     t.index ["state"], name: "index_traces_on_state"
     t.index ["tracer"], name: "index_traces_on_tracer"
   end
+
+
+  create_view "developers_stats", materialized: true, sql_definition: <<-SQL
+      SELECT to_char(developers.visited_at, 'YYYY-MM-DD'::text) AS visited_date,
+      count(*) AS visited_count
+     FROM developers
+    WHERE (developers.visited_at IS NOT NULL)
+    GROUP BY (to_char(developers.visited_at, 'YYYY-MM-DD'::text));
+  SQL
+  add_index "developers_stats", ["visited_date"], name: "index_developers_stats_on_visited_date", unique: true
+
+  create_view "repositories_stats", materialized: true, sql_definition: <<-SQL
+      SELECT to_char(repositories.visited_at, 'YYYY-MM-DD'::text) AS visited_date,
+      count(*) AS visited_count
+     FROM repositories
+    WHERE (repositories.visited_at IS NOT NULL)
+    GROUP BY (to_char(repositories.visited_at, 'YYYY-MM-DD'::text));
+  SQL
+  add_index "repositories_stats", ["visited_date"], name: "index_repositories_stats_on_visited_date", unique: true
 
 end

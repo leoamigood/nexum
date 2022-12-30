@@ -2,3 +2,19 @@ rate_limit_job-1:
   cron: 'every minute'
   class: 'RateLimitJob'
   queue: critical-1
+
+developers_stats_refresh_job:
+  cron: 'every hour'
+  class: 'ViewRefreshJob'
+  queue: periodical
+  args:
+    table: "developers_stats"
+    concurrently: false
+
+repositories_stats_refresh_job:
+  cron: 'every hour'
+  class: 'ViewRefreshJob'
+  queue: periodical
+  args:
+    table: "repositories_stats"
+    concurrently: true

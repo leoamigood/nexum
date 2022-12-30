@@ -6,48 +6,40 @@ class ChartsController < ApplicationController
   def index
     sql = %{
       SELECT * FROM (
-        SELECT to_char(visited_at, 'YYYY-MM-DD') visited_date, SUM(count(*)) OVER (ORDER BY to_char(visited_at, 'YYYY-MM-DD'))
-        FROM developers
-        WHERE visited_at IS NOT NULL
-        GROUP BY to_char(visited_at, 'YYYY-MM-DD')
-        ORDER BY to_char(visited_at, 'YYYY-MM-DD') DESC
+        SELECT visited_date, SUM(visited_count) OVER (ORDER BY visited_date)
+        FROM developers_stats
+        ORDER BY visited_date DESC
         LIMIT 14
       ) developers
       ORDER BY visited_date ASC
     }
     @developers = ActiveRecord::Base.connection.execute(sql).values
 
-    sql = %{
-      SELECT to_char(visited_at, 'YYYY-MM-DD') visited_date, count(*)
-      FROM developers
-      WHERE visited_at > NOW() - INTERVAL '14 DAY'
-      GROUP BY to_char(visited_at, 'YYYY-MM-DD')
-      ORDER BY to_char(visited_at, 'YYYY-MM-DD') DESC
+    sql = %(
+      SELECT visited_date, visited_count
+      FROM developers_stats
+      ORDER BY visited_date DESC
       LIMIT 14
-    }
+    )
     @daily_devs = ActiveRecord::Base.connection.execute(sql).values
 
     sql = %{
       SELECT * FROM (
-        SELECT to_char(visited_at, 'YYYY-MM-DD') visited_date, SUM(count(*)) OVER (ORDER BY to_char(visited_at, 'YYYY-MM-DD'))
-        FROM repositories
-        WHERE visited_at IS NOT NULL
-        GROUP BY to_char(visited_at, 'YYYY-MM-DD')
-        ORDER BY to_char(visited_at, 'YYYY-MM-DD') DESC
+        SELECT visited_date, SUM(visited_count) OVER (ORDER BY visited_date)
+        FROM repositories_stats
+        ORDER BY visited_date DESC
         LIMIT 14
       ) repositories
       ORDER BY visited_date ASC
     }
     @repositories = ActiveRecord::Base.connection.execute(sql).values
 
-    sql = %{
-      SELECT to_char(visited_at, 'YYYY-MM-DD') visited_date, count(*)
-      FROM repositories
-      WHERE visited_at > NOW() - INTERVAL '14 DAY'
-      GROUP BY to_char(visited_at, 'YYYY-MM-DD')
-      ORDER BY to_char(visited_at, 'YYYY-MM-DD') DESC
+    sql = %(
+      SELECT visited_date, visited_count
+      FROM repositories_stats
+      ORDER BY visited_date DESC
       LIMIT 14
-    }
+    )
     @daily_repos = ActiveRecord::Base.connection.execute(sql).values
     render
   end
