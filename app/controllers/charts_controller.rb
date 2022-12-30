@@ -41,6 +41,24 @@ class ChartsController < ApplicationController
       LIMIT 14
     )
     @daily_repos = ActiveRecord::Base.connection.execute(sql).values
+
+    sql = %{
+      SELECT to_char(created_at, 'YYYY-MM-DD') visited_at,
+             percentile_cont(.5) within group (ORDER BY CAST(value AS float)) AS percentile_50,
+             percentile_cont(.95) within group (ORDER BY CAST(value AS float)) AS percentile_95,
+             percentile_cont(.99) within group (ORDER BY CAST(value AS float)) AS percentile_99
+      FROM traces
+      WHERE state = 'benchmark'
+      GROUP BY to_char(created_at, 'YYYY-MM-DD')
+      ORDER BY to_char(created_at, 'YYYY-MM-DD') ASC
+    }
+    values = ActiveRecord::Base.connection.execute(sql).values
+    @performance = values.each_with_object(Hash.new { {} }) do |line, result|
+      result['50%'] = result['50%'].merge(line[0] => line[1])
+      result['95%'] = result['95%'].merge(line[0] => line[2])
+      result['99%'] = result['99%'].merge(line[0] => line[3])
+    end
+
     render
   end
 
