@@ -67,7 +67,7 @@ jobs:
         with:
           image_path: tabulae/nexum
       - name: Deploy as Digital Ocean app
-        uses: digitalocean/app_action@main
+        uses: digitalocean/app_action@v1.1.4
         with:
           app_name: finder
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
