@@ -1,4 +1,4 @@
 rate_limit_job-2:
   cron: 'every minute'
   class: 'RateLimitJob'
-  queue: critical-2
+  queue: critical-sq-2

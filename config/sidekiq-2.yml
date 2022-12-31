@@ -4,8 +4,8 @@
 :timeout: 25
 
 :queues:
-  - critical-2
+  - critical-sq-2
+  - rollbar
   - high
   - medium
   - low
-  - rollbar

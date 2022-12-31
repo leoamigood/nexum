@@ -1,7 +1,7 @@
 rate_limit_job-1:
   cron: 'every minute'
   class: 'RateLimitJob'
-  queue: critical-1
+  queue: critical-sq-1
 
 developers_stats_refresh_job:
   cron: 'every hour'

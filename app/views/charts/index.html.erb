@@ -6,7 +6,7 @@
 <br/>
 
 <%= turbo_stream_from 'charts' %>
-<div id="critical-1"></div>
-<div id="critical-2"></div>
+<div id="rate-sq-1"></div>
+<div id="rate-sq-2"></div>
 
 <%= line_chart @performance.map {|name, data| {name:, data:}}, title: 'Surfer performance', ytitle: "Time, sec"%>

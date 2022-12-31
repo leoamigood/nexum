@@ -4,9 +4,9 @@
 :timeout: 25
 
 :queues:
-  - critical-1
+  - critical-sq-1
+  - periodical
+  - rollbar
   - high
   - medium
   - low
-  - rollbar
-  - periodical

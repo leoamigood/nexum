@@ -3,7 +3,7 @@
 class RateLimitJob
   include Sidekiq::Job
   include OctokitResource
-  queue_as ENV.fetch('RATE_QUEUE', :critical)
+  queue_as "critical-#{ENV.fetch('INSTANCE_NAME')}"
 
   sidekiq_options retry: false
 
@@ -13,6 +13,6 @@ class RateLimitJob
 
     Rails.logger.info "Rate limits: #{RateLimiter.limits} for queues: #{RateLimiter.queues}"
 
-    Turbo::StreamsChannel.broadcast_update_to('charts', target: sidekiq_options_hash['queue'], partial: 'charts/rate', locals: { limits: RateLimiter.limits })
+    Turbo::StreamsChannel.broadcast_update_to('charts', target: "rate-#{ENV.fetch('INSTANCE_NAME')}", partial: 'charts/rate', locals: { limits: RateLimiter.limits })
   end
 end
