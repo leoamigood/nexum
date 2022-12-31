@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_30_133231) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_31_191032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,6 +52,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_30_133231) do
     t.string "manager", null: false
     t.index ["manager"], name: "index_libraries_on_manager"
     t.index ["name"], name: "index_libraries_on_name"
+    t.index ["repository_id"], name: "index_libraries_on_repository_id"
   end
 
   create_table "repositories", force: :cascade do |t|

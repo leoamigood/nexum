@@ -14,7 +14,7 @@ describe ViewRefreshJob do
 
     it 'queue increases in size' do
       expect do
-        described_class.perform_async(table: 'repositories_stats', concurrently: true)
+        described_class.perform_async('table' => 'repositories_stats', 'concurrently' => true)
       end.to change(described_class.jobs, :size).by(1)
     end
   end

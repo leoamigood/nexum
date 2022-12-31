@@ -14,7 +14,7 @@ class Developer < ApplicationRecord
 
   class << self
     def persist!(user)
-      developer = find_or_create_by!(username: user.login)
+      developer = find_or_initialize_by(username: user.login)
 
       developer.name             = user.name
       developer.email            = user.email

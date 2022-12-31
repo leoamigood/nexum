@@ -3,8 +3,8 @@
 module JobBenchmarker
   include Tracer
 
-  def perform(username)
-    time = Benchmark.measure { super(username) }
-    trace(:benchmark, username, value: time.real)
+  def perform(*args)
+    time = Benchmark.measure { super(*args) }
+    trace(:benchmark, args.join(','), value: time.real)
   end
 end

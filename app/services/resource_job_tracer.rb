@@ -3,14 +3,14 @@
 module ResourceJobTracer
   include Tracer
 
-  def perform(name)
-    trace(:attempted, name)
-    super(name)
-    trace(:succeeded, name)
+  def perform(*args)
+    trace(:attempted, args.join(','))
+    super(*args)
+    trace(:succeeded, args.join(','))
   rescue SkipSurfException
-    trace(:skipped, name)
+    trace(:skipped, args.join(','))
   rescue StandardError => e
-    trace(:failed, name, message: e.message)
+    trace(:failed, args.join(','), message: e.message)
     raise e
   end
 end

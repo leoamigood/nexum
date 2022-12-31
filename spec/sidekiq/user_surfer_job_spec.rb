@@ -28,7 +28,7 @@ describe UserSurferJob do
       Sidekiq::Testing.fake!
     end
 
-    context 'when user resource not found' do
+    context 'when developer resource not found' do
       before do
         allow_any_instance_of(Octokit::Client).to receive(:user).and_raise(Octokit::NotFound)
       end
@@ -51,7 +51,7 @@ describe UserSurferJob do
       end
     end
 
-    context 'when user account with followers successfully discovered' do
+    context 'when developer account with followers successfully discovered' do
       let(:user) { build(:octokit, :user) }
       let(:follower) { build(:octokit, :user) }
       let(:following) { build(:octokit, :user) }
@@ -74,7 +74,7 @@ describe UserSurferJob do
         allow_any_instance_of(Octokit::Client).to receive(:following).with(following.login, per_page: 100).and_return([])
       end
 
-      it 'user info is persisted' do
+      it 'developer info is persisted' do
         expect do
           described_class.perform_async(user.login)
         end.to change(Developer, :count).by(3)
@@ -99,19 +99,29 @@ describe UserSurferJob do
       context 'when developer has been recently visited' do
         let!(:developer) { create(:developer, :recently_visited, username: user.login) }
 
-        it 'skip surfing this user and his follows' do
+        it 'skip surfing this developer and his follows' do
           described_class.perform_async(user.login)
 
           expect(RepoSurferJob).not_to have_received(:perform_async)
         end
 
-        it 'skip surfing this user and adds the trace' do
+        it 'skip surfing this developer and adds the trace' do
           described_class.perform_async(user.login)
 
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::ATTEMPTED)).to be_traced
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::SKIPPED)).to be_traced
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::SUCCEEDED)).not_to be_traced
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::FAILED)).not_to be_traced
+        end
+
+        context 'when refresh is forced' do
+          it 'updates developer attributes' do
+            expect do
+              described_class.perform_async(user.login, 'refresh' => true)
+
+              expect(developer.reload.email).to eq(user.email)
+            end.to change(developer, :visited_at)
+          end
         end
       end
     end

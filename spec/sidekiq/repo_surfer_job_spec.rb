@@ -70,6 +70,16 @@ describe RepoSurferJob do
           end
         end
 
+        context 'with existing repos' do
+          let!(:repository) { create(:repository, developer:, id: repos.first.id) }
+
+          it 'delete existing repos and creates new ones' do
+            expect do
+              described_class.perform_async(developer.username)
+            end.to change(Repository, :count).by(2)
+          end
+        end
+
         context 'includes forked repo' do
           let(:forked) { build(:octokit, :repo, :forked) }
 

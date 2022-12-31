@@ -8,7 +8,8 @@ class RepoSurferJob
   prepend ResourceJobTracer
   prepend JobWatcher
 
-  sidekiq_options queue: :medium, timeout: 30.minutes
+  sidekiq_options queue: :medium, timeout: 30.minutes,
+                  lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
   sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
@@ -29,7 +30,11 @@ class RepoSurferJob
                 .assign(owner_name: repo.owner.login, developer_id: developer.id)
                 .assign(visited_at: Time.current)
     end
-    Repository.insert_all(repositories.map(&:attributes))
+
+    Repository.transaction do
+      Repository.where(id: repositories.map(&:id)).delete_all
+      Repository.insert_all(repositories.map(&:attributes))
+    end
 
     repositories.reject(&:fork).each do |repo|
       ContentSurferJob.perform_async(repo.full_name)

@@ -8,12 +8,13 @@ class UserSurferJob
   prepend ResourceJobTracer
   prepend JobWatcher
 
-  sidekiq_options queue: :low, timeout: 30.minutes
+  sidekiq_options queue: :low, timeout: 30.minutes,
+                  lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
   sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
 
-  def perform(username)
-    raise SkipSurfException if Developer.recently_visited?(username)
+  def perform(username, options = { 'refresh' => false })
+    raise SkipSurfException if Developer.recently_visited?(username) && options['refresh'] == false
 
     user = client.user(username)
     developer = Developer.persist!(user)

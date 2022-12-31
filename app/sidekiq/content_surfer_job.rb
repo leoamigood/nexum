@@ -23,7 +23,13 @@ class ContentSurferJob
       library.repository = repository
       library
     end
-    Library.insert_all(libraries.map(&:attributes)) if libraries.present?
+
+    if libraries.present?
+      Library.transaction do
+        Library.where(repository_id: libraries.map(&:repository_id)).delete_all
+        Library.insert_all(libraries.map(&:attributes))
+      end
+    end
   rescue ProjectError => e
     trace(:warning, repository.full_name, message: e.message, value: e.class.name)
   end
