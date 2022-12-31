@@ -4,4 +4,9 @@
 <%= area_chart @daily_repos, title: 'Repositories processed daily', colors: %w[#bd0 #666], thousands: "," %>
 <%= area_chart @repositories, title: 'Cumulative repositories processed', curve: false, thousands: "," %>
 <br/>
+
+<%= turbo_stream_from 'charts' %>
+<div id="critical-1"></div>
+<div id="critical-2"></div>
+
 <%= line_chart @performance.map {|name, data| {name:, data:}}, title: 'Surfer performance', ytitle: "Time, sec"%>
