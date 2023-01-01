@@ -19,6 +19,8 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  root 'charts#index'
+  root 'landing#index'
+
+  get 'charts', action: 'index', controller: 'charts'
   get 'stats', action: 'stats', controller: 'charts'
 end
