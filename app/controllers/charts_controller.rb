@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ChartsController < ApplicationController
+  before_action :authenticate_user!
+
   COMMON_LANGUAGES = %w[JavaScript Ruby C++ C Java Python Java PHP Go].freeze
 
   def index

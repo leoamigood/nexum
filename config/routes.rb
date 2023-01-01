@@ -4,6 +4,7 @@ require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
 Rails.application.routes.draw do
+  devise_for :users, controllers: { registrations: 'registrations', omniauth_callbacks: 'omniauth_callbacks' }
   mount Sidekiq::Web, at: '/sidekiq'
 
   scope :monitoring do
@@ -19,8 +20,6 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  root 'landing#index'
-
-  get 'charts', action: 'index', controller: 'charts'
+  root 'charts#index'
   get 'stats', action: 'stats', controller: 'charts'
 end
