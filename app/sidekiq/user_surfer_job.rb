@@ -4,6 +4,7 @@ class UserSurferJob
   include Sidekiq::Job
   include Sidekiq::Throttled::Job
   include OctokitResource
+  prepend OctokitToken
   prepend JobBenchmarker
   prepend ResourceJobTracer
   prepend JobWatcher
@@ -11,10 +12,10 @@ class UserSurferJob
   sidekiq_options queue: :low, timeout: 30.minutes,
                   lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
-  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
+  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(sidekiq_options['queue']) ? 0 : 1 } })
 
-  def perform(username, options = { 'refresh' => false })
-    raise SkipSurfException if Developer.recently_visited?(username) && options['refresh'] == false
+  def perform(username, _options = {})
+    raise SkipSurfException unless revisit?(username)
 
     user = client.user(username)
     developer = Developer.persist!(user)
@@ -24,8 +25,6 @@ class UserSurferJob
 
     developer.visited!
   end
-
-  private
 
   def surface_repos(developer)
     RepoSurferJob.perform_async(developer.username)
@@ -47,5 +46,9 @@ class UserSurferJob
 
     undiscovered.each { |username| UserSurferJob.perform_async(username) }
     undiscovered
+  end
+
+  def revisit?(username)
+    Developer.stale?(username)
   end
 end

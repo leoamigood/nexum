@@ -7,6 +7,8 @@ describe StatsSurferJob do
   specify { is_expected.to be_processed_in :high }
   specify { is_expected.to be_retryable 3 }
 
+  it_behaves_like 'octokit_resource'
+
   context 'when job is enqueued' do
     before do
       Sidekiq::Testing.fake!
