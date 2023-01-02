@@ -12,7 +12,7 @@ class ContentSurferJob
   sidekiq_options queue: :high, retry: 3, timeout: 15.minutes,
                   lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
-  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 2 } })
+  sidekiq_throttle(concurrency: { limit: ->(*_args) { RateLimiter.limited?(sidekiq_options['queue']) ? 0 : 2 } })
 
   def perform(repo_full_name)
     repository = Repository.find_by!(full_name: repo_full_name)

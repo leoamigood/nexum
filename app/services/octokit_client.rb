@@ -10,8 +10,8 @@ class OctokitClient
   ].freeze
 
   class << self
-    def client
-      Octokit::Client.new(access_token: github_access_token!)
+    def client(token = nil)
+      Octokit::Client.new(access_token: token || github_access_token!)
     end
 
     def github_access_token!
