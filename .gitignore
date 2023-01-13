@@ -47,3 +47,5 @@ coverage/
 *git.store
 
 /config/credentials/test.key
+
+/config/credentials/production.key
