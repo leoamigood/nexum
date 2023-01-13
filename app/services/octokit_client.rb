@@ -6,12 +6,12 @@ class OctokitClient
   GITHUB_CREDENTIALS = [
     'type'     => 'git_source',
     'host'     => 'github.com',
-    'password' => ENV.fetch('GITHUB_ACCESS_TOKEN', Rails.application.credentials.github_access_token!)
+    'password' => ENV.fetch('GITHUB_ACCESS_TOKEN', Rails.application.credentials.github.access_token!)
   ].freeze
 
   class << self
-    def client
-      Octokit::Client.new(access_token: github_access_token!)
+    def client(token = nil)
+      Octokit::Client.new(access_token: token || github_access_token!)
     end
 
     def github_access_token!

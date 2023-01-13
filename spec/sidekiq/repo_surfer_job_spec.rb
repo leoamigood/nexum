@@ -7,6 +7,8 @@ describe RepoSurferJob do
   specify { is_expected.to be_processed_in :medium }
   specify { is_expected.to be_retryable true }
 
+  it_behaves_like 'octokit_resource'
+
   context 'when job is enqueued' do
     before do
       Sidekiq::Testing.fake!

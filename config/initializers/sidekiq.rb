@@ -5,6 +5,7 @@ require 'sidekiq-unique-jobs'
 SidekiqUniqueJobs.configure do |config|
   config.enabled = !Rails.env.test?
   config.logger_enabled = !Rails.env.test?
+  config.lock_info = !Rails.env.test?
 end
 
 Sidekiq.configure_client do |config|

@@ -7,7 +7,7 @@ module OctokitResource
 
   included do
     def client
-      @client ||= OctokitClient.client
+      @client ||= OctokitClient.client(token)
     end
 
     def per_page
@@ -19,6 +19,11 @@ module OctokitResource
         last_response = last_response.rels[:next].get
         yield last_response.data
       end
+    end
+
+    # override token() method to setup client with a custom token
+    def token
+      nil
     end
   end
 end

@@ -5,6 +5,7 @@
 
 :queues:
   - critical-sq-1
+  - priority
   - periodical
   - rollbar
   - high

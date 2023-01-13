@@ -7,6 +7,8 @@ describe UserSurferJob do
   specify { is_expected.to be_processed_in :low }
   specify { is_expected.to be_retryable true }
 
+  it_behaves_like 'octokit_resource'
+
   context 'when job is enqueued' do
     before do
       Sidekiq::Testing.fake!
@@ -65,6 +67,7 @@ describe UserSurferJob do
         allow_any_instance_of(Octokit::Client).to receive(:following).with(user.login, per_page: 100).and_return([following])
 
         allow(RepoSurferJob).to receive(:perform_async)
+
         allow_any_instance_of(Octokit::Client).to receive(:user).with(follower.login).and_return(follower)
         allow_any_instance_of(Octokit::Client).to receive(:followers).with(follower.login, per_page: 100).and_return([])
         allow_any_instance_of(Octokit::Client).to receive(:following).with(follower.login, per_page: 100).and_return([])
@@ -112,16 +115,6 @@ describe UserSurferJob do
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::SKIPPED)).to be_traced
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::SUCCEEDED)).not_to be_traced
           expect(Trace.find_by(name: user.login, state: Enum::TraceState::FAILED)).not_to be_traced
-        end
-
-        context 'when refresh is forced' do
-          it 'updates developer attributes' do
-            expect do
-              described_class.perform_async(user.login, 'refresh' => true)
-
-              expect(developer.reload.email).to eq(user.email)
-            end.to change(developer, :visited_at)
-          end
         end
       end
     end

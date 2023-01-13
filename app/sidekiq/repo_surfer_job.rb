@@ -4,6 +4,7 @@ class RepoSurferJob
   include Sidekiq::Job
   include Sidekiq::Throttled::Job
   include OctokitResource
+  prepend OctokitToken
   prepend JobBenchmarker
   prepend ResourceJobTracer
   prepend JobWatcher
@@ -11,9 +12,9 @@ class RepoSurferJob
   sidekiq_options queue: :medium, timeout: 30.minutes,
                   lock: :until_executed, on_conflict: { client: :log, server: :reject }
 
-  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(get_sidekiq_options['queue']) ? 0 : 1 } })
+  sidekiq_throttle(concurrency: { limit: ->(_) { RateLimiter.limited?(queue) ? 0 : 1 } })
 
-  def perform(username)
+  def perform(username, _options = {})
     developer = Developer.find_by!(username:)
 
     persist(developer, client.repos(developer.username, per_page:))

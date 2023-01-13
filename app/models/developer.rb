@@ -31,8 +31,8 @@ class Developer < ApplicationRecord
       developer
     end
 
-    def recently_visited?(username)
-      recent.where(username:).present?
+    def stale?(username)
+      recent.where(username:).blank?
     end
   end
 
