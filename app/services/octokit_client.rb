@@ -6,7 +6,7 @@ class OctokitClient
   GITHUB_CREDENTIALS = [
     'type'     => 'git_source',
     'host'     => 'github.com',
-    'password' => ENV.fetch('GITHUB_ACCESS_TOKEN', Rails.application.credentials.github.access_token!)
+    'password' => ENV.fetch('GITHUB_ACCESS_TOKEN', Rails.application.credentials.github.access_token)
   ].freeze
 
   class << self
