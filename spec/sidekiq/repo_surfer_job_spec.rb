@@ -5,7 +5,7 @@ require 'sidekiq/testing'
 
 describe RepoSurferJob do
   specify { is_expected.to be_processed_in :medium }
-  specify { is_expected.to be_retryable true }
+  specify { is_expected.to be_retryable 3 }
 
   it_behaves_like 'octokit_resource'
 
